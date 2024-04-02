@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_BASIC_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -38,6 +38,22 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+ADDITIONAL_LIBRARY_APPS = [
+    'drf_spectacular',
+    'rest_framework',
+]
+
+CUSTOM_USER_APPS = [
+    'freelancer_users.apps.FreelancerUsersConfig',
+    'business_users.apps.BusinessUsersConfig',
+    'countries.apps.CountriesConfig',
+    'terms.apps.TermsConfig',
+    'freelancer_terms.apps.FreelancerTermsConfig',
+    'business_terms.apps.BusinessTermsConfig',
+]
+
+INSTALLED_APPS = ADDITIONAL_LIBRARY_APPS + DJANGO_BASIC_APPS + CUSTOM_USER_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -103,13 +119,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ko-kr"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "asia/soeul"
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -121,3 +137,13 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'FLYING_PIG',
+    'DESCRIPTION': 'API Documentation',
+    'VERSION': '0.0.1',
+}
