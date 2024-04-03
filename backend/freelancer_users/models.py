@@ -19,4 +19,4 @@ class FreelancerUser(AbstractBaseUser, Common):
     USERNAME_FIELD = 'user_id'
 
     def __str__(self):
-        return self.user_id
+        return self.user_id 
