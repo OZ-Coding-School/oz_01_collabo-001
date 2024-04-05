@@ -1,16 +1,26 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import FreelancerSerializer
-from .models import Freelancer
+from .serializers import FreelancerUserSerializer
+from .models import FreelancerUser
 from rest_framework import status
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import NotFound
 
-class CheckUserId(APIView):
-    def post(self, request):
-        user_id = request.data.get('user_id', None)
-        if user_id:
-            if Freelancer.objects.filter(user_id=user_id).exists():
-                return Response({'detail': '사용자 ID가 이미 존재합니다'}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({'detail': '사용자 ID를 사용할 수 있습니다'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'detail': '사용자 ID가 제공되지 않았습니다'}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserDetail(APIView):
+    def get(self, request, pk):
+        freelancer = self.get_object(pk)
+        serializer = FreelancerUserSerializer(freelancer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_object(self, pk):
+        try:
+            return FreelancerUser.objects.get(pk=pk)
+        except FreelancerUser.DoesNotExist:
+            raise NotFound
+        
+    def delete(self, request, pk):
+        freelancer = self.get_object(pk)
+        freelancer.delete()
+        return Response({'detail': '삭제 완료'}, status=status.HTTP_200_OK)
