@@ -1,13 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
-# from freelancer_users.models import FreelancerUser
 from common.models import Common
 from countries.models import Country
-
-
-# class BusinessUser(FreelancerUser):
-#     company = models.CharField(max_length=50)
-
 
 class BusinessUser(AbstractBaseUser, Common):
     id = models.AutoField(primary_key=True)
