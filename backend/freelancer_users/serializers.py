@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Freelancer
+from .models import FreelancerUser
 
-class FreelancerSerializer(serializers.ModelSerializer):
+class FreelancerUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Freelancer
-        fields = ['first_name', 'last_name', 'email', 'user_id', 'password', 'id', 'country', 'lan', 'mobile']
+        model = FreelancerUser
+        fields = ['id', 'first_name', 'last_name', 'user_id', 'password', 'country', 'mobile', 'email', 'language', 'is_active']
