@@ -54,6 +54,7 @@ CUSTOM_USER_APPS = [
     'freelancer_terms.apps.FreelancerTermsConfig',
     'business_terms.apps.BusinessTermsConfig',
     'freelancer_emails.apps.FreelancerEmailsConfig',
+    'business_emails.apps.BusinessEmailsConfig',
 ]
 
 INSTALLED_APPS = ADDITIONAL_LIBRARY_APPS + DJANGO_BASIC_APPS + CUSTOM_USER_APPS
