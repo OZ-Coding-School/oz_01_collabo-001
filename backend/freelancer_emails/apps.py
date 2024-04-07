@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class FreelancerEmailConfig(AppConfig):
+class FreelancerEmailsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'freelancer_email'
+    name = 'freelancer_emails'
