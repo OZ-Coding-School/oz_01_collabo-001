@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from .models import BusinessUser
-from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUp
+from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUp, ChangePasswordSerializer
 from business_emails.serializers import BusinessUserEmailVerification as EmailVerification
 from .serializers import BusinessUserSerializer
 from django.shortcuts import get_object_or_404
@@ -77,14 +77,15 @@ class SignUp(APIView):
 
 
 class ChangePasswordView(APIView):
-    # 어떻게 값을 받아올지 프론트와 상의 필요
-    def post(self, request, pk):
+    serializer_class = ChangePasswordSerializer
+    def put(self, request, pk):
         business_user = get_object_or_404(BusinessUser, pk=pk)
-        new_password = request.data.get('new_password')
+        serializer = ChangePasswordSerializer(data=request.data)
 
-        if new_password:
+        if serializer.is_valid():
+            new_password = serializer.validated_data.get('new_password')
             business_user.set_password(new_password)
             business_user.save()
             return Response({'detail': '비밀번호가 성공적으로 변경되었습니다!'}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': '새로운 비밀번호가 제공되지 않았습니다!'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

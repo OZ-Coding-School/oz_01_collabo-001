@@ -1,7 +1,7 @@
 from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import FreelancerUserSerializer
+from .serializers import FreelancerUserSerializer, ChangePasswordSerializer
 from .serializers import FreelancerUserSignUpSerializer as SignUpSerializer
 from freelancer_emails.serializers import FreelancerUserEmailVerification as EmailVerification
 from .models import FreelancerUser
@@ -76,13 +76,14 @@ class SignUp(APIView):
             return Response({ "message" : str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangePasswordView(APIView):
-    def post(self, request, pk):
+    def put(self, request, pk):
         freelancer = get_object_or_404(FreelancerUser, pk=pk)
-        new_password = request.data.get('new_password')
+        serializer = ChangePasswordSerializer(data=request.data)
 
-        if new_password:
+        if serializer.is_valid():
+            new_password = serializer.validated_data.get('new_password')
             freelancer.set_password(new_password)
             freelancer.save()
             return Response({'detail': '비밀번호가 성공적으로 변경되었습니다.'}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': '새로운 비밀번호가 제공되지 않았습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
