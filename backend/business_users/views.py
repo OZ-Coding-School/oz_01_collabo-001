@@ -87,4 +87,4 @@ class ChangePasswordView(APIView):
             business_user.save()
             return Response({'detail': '비밀번호가 성공적으로 변경되었습니다!'}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': '새로운 비밀번호가 제공되지 않았습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': '새로운 비밀번호가 제공되지 않았습니다!'}, status=status.HTTP_400_BAD_REQUEST)
