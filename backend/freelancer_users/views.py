@@ -1,7 +1,7 @@
 from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import FreelancerUserSerializer
+from .serializers import FreelancerUserSerializer, ChangePasswordSerializer
 from .serializers import FreelancerUserSignUpSerializer as SignUpSerializer
 from freelancer_emails.serializers import FreelancerUserEmailVerification as EmailVerification
 from .models import FreelancerUser
@@ -9,6 +9,7 @@ from rest_framework import status
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserDetail(APIView):
@@ -76,13 +77,24 @@ class SignUp(APIView):
             return Response({ "message" : str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangePasswordView(APIView):
-    def post(self, request, pk):
-        freelancer = get_object_or_404(FreelancerUser, pk=pk)
-        new_password = request.data.get('new_password')
+    permission_classes = [IsAuthenticated]  # 인증된 사용자만 비밀번호 변경을 허용
 
-        if new_password:
-            freelancer.set_password(new_password)
-            freelancer.save()
-            return Response({'detail': '비밀번호가 성공적으로 변경되었습니다.'}, status=status.HTTP_200_OK)
+    def put(self, request, pk):
+        freelancer = get_object_or_404(FreelancerUser, pk=pk)
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            new_password = serializer.validated_data.get('new_password')
+            old_password = request.data.get('old_password')  # 기존 비밀번호를 요청 데이터에서 가져옴.
+
+            # 기존 비밀번호와 신규 비밀번호가 일치하는지 확인.
+            if freelancer.check_password(old_password):
+                # 일치할 경우에만 비밀번호를 변경하고 저장.
+                freelancer.set_password(new_password)
+                freelancer.save()
+                return Response({'detail': '비밀번호가 성공적으로 변경되었습니다.'}, status=status.HTTP_200_OK)
+            else:
+                # 일치하지 않을 경우 변경을 거부하고 에러 메시지를 반환.
+                return Response({'error': '기존 비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'error': '새로운 비밀번호가 제공되지 않았습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
