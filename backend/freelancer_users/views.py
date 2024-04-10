@@ -24,10 +24,12 @@ class UserDetail(APIView):
         except FreelancerUser.DoesNotExist:
             raise NotFound
         
+class UserDelete(APIView):
     def delete(self, request, pk):
-        freelancer = self.get_object(pk)
+        freelancer = get_object_or_404(FreelancerUser, pk=pk)
         freelancer.delete()
-        return Response({'detail': '삭제 완료'}, status=status.HTTP_200_OK)
+        return Response({'detail': '삭제 완료'})
+    
     
 class SignUp(APIView):
     serializer_class = SignUpSerializer

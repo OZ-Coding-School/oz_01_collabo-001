@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from .models import BusinessUser
-from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUp, ChangePasswordSerializer
+from .serializers import BusinessUserSerializer, UserDeleteSerializer, BusinessUserSignUpSerializer as SignUp, ChangePasswordSerializer
 from business_emails.serializers import BusinessUserEmailVerification as EmailVerification
 from .serializers import BusinessUserSerializer
 from django.shortcuts import get_object_or_404
@@ -23,10 +23,14 @@ class UserDetail(APIView):
         except BusinessUser.DoesNotExist:
             raise NotFound
 
+class UserDelete(APIView):
     def delete(self, request, pk):
-        business_user = self.get_object(pk)
-        business_user.delete()
-        return Response(status=204)
+        business_user = get_object_or_404(BusinessUser, pk=pk)
+        serializer = UserDeleteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.user_delete(business_user)
+            return Response({'detail': '삭제 완료'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SignUp(APIView):
     serializer_class = SignUp

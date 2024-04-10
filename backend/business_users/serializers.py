@@ -58,5 +58,12 @@ class BusinessUserSignUpSerializer(serializers.ModelSerializer):
         user.save()
         return user
     
+
+class UserDeleteSerializer(serializers.Serializer):
+    confirm_delete = serializers.BooleanField(required=True)
+
+    def user_delete(self, instance):
+        instance.delete()
+    
 class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
