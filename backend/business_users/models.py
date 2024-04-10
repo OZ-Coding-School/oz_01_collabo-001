@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.backends import ModelBackend
 from common.models import Common
 from countries.models import Country
 
@@ -21,3 +22,12 @@ class BusinessUser(AbstractBaseUser, Common):
 
     def __str__(self):
         return self.user_id
+    
+class BusinessUserAuth(ModelBackend):
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        try:
+            user = BusinessUser.objects.get(user_id=username)
+            if user.check_password(password):
+                return user
+        except BusinessUser.DoesNotExist:
+            return None

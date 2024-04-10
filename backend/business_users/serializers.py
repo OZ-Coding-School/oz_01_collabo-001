@@ -60,3 +60,10 @@ class BusinessUserSignUpSerializer(serializers.ModelSerializer):
     
 class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
+
+class BusinessUserloginSerializer(serializers.Serializer):
+    user_id = serializers.CharField(required=True)
+    password = serializers.CharField(
+        write_only=True,
+        required=True
+    )
