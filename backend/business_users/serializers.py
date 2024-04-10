@@ -57,3 +57,10 @@ class BusinessUserSignUpSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+class BusinessUserloginSerializer(serializers.Serializer):
+    user_id = serializers.CharField(required=True)
+    password = serializers.CharField(
+        write_only=True,
+        required=True
+    )

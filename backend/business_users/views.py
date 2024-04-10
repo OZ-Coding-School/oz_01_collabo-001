@@ -1,14 +1,16 @@
 from django.core.cache import cache
+from django.contrib.auth import authenticate
+from django.middleware.csrf import get_token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import NotFound
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from .models import BusinessUser
-from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUp
+from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUpSerializer, BusinessUserloginSerializer as Login
 from business_emails.serializers import BusinessUserEmailVerification as EmailVerification
 from .serializers import BusinessUserSerializer
 from django.shortcuts import get_object_or_404
-from rest_framework import status
 
 class UserDetail(APIView):
     def get(self, request, pk):
@@ -28,7 +30,7 @@ class UserDetail(APIView):
         return Response(status=204)
 
 class SignUp(APIView):
-    serializer_class = SignUp
+    serializer_class = SignUpSerializer
     def post(self, request):
         try:
             # 이메일 인증 테이블에 유저가 입력한 email 데이터가 있는지 확인
@@ -40,7 +42,7 @@ class SignUp(APIView):
             # 없음 -> 404 리턴
             return Response({'message': 'Please verify your email'}, status=status.HTTP_404_NOT_FOUND)
         # 유저데이터 직렬화
-        serializer = SignUp(data=request.data)
+        serializer = SignUpSerializer(data=request.data)
 
         try :
             # 직렬화된 데이터 검증
@@ -88,3 +90,25 @@ class ChangePasswordView(APIView):
             return Response({'detail': '비밀번호가 성공적으로 변경되었습니다!'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': '새로운 비밀번호가 제공되지 않았습니다!'}, status=status.HTTP_400_BAD_REQUEST)
+
+class Login(APIView):
+    serializer_class = Login
+    def post(self, request):
+        user_id = request.data['user_id']
+        password = request.data['password']
+        try :
+            user = authenticate(username=user_id, password=password)
+            if user is not None:
+                refresh = RefreshToken.for_user(user)
+                access = AccessToken.for_user(user)
+                response_data = {'message': 'Login successful!'}
+                response = Response(response_data)
+                response.set_cookie(key='refrash-token', value=str(refresh.access_token), httponly=True)
+                response.set_cookie(key='access-token', value=str(access.), httponly=True)
+                response.set_cookie(key='csrftoken', value=get_token(request), domain='127.0.0.1', path='/')
+                print(refresh.access_token)
+                return response
+            else:
+                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        except :
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
