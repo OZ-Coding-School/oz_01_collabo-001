@@ -75,7 +75,7 @@ class SignUp(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({ "message" : str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 
 class ChangePasswordView(APIView):
@@ -99,14 +99,12 @@ class Login(APIView):
         try :
             user = authenticate(username=user_id, password=password)
             if user is not None:
-                refresh = RefreshToken.for_user(user)
-                access = AccessToken.for_user(user)
+                token = RefreshToken.for_user(user)
                 response_data = {'message': 'Login successful!'}
                 response = Response(response_data)
-                response.set_cookie(key='refrash-token', value=str(refresh.access_token), httponly=True)
-                response.set_cookie(key='access-token', value=str(access.), httponly=True)
+                response.set_cookie(key='access-token', value=str(token.access_token), httponly=True)
+                response.set_cookie(key='refrash-token', value=str(token), httponly=True)
                 response.set_cookie(key='csrftoken', value=get_token(request), domain='127.0.0.1', path='/')
-                print(refresh.access_token)
                 return response
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
