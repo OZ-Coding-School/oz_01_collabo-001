@@ -8,6 +8,11 @@ class FreelancerUserSerializer(serializers.ModelSerializer):
         model = FreelancerUser
         fields = ['id', 'first_name', 'last_name', 'user_id', 'password', 'country', 'mobile', 'email', 'language', 'is_active']
 
+class FreelancerUsercheck(serializers.ModelSerializer):
+    class Meta:
+        model = FreelancerUser
+        fields = ['id', 'first_name', 'last_name', 'company', 'user_id', 'is_active']
+
 class FreelancerUserSignUpSerializer(serializers.ModelSerializer):
     user_id = serializers.CharField(
         required=True,
@@ -59,3 +64,10 @@ class FreelancerUserSignUpSerializer(serializers.ModelSerializer):
     
 class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
+
+class FreelancerUserloginSerializer(serializers.Serializer):
+    user_id = serializers.CharField(required=True)
+    password = serializers.CharField(
+        write_only=True,
+        required=True
+    )
