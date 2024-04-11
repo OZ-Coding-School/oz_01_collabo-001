@@ -8,6 +8,11 @@ class BusinessUserSerializer(serializers.ModelSerializer):
         model = BusinessUser
         fields = ['id', 'first_name', 'last_name', 'company', 'user_id', 'password', 'country', 'mobile', 'email', 'language', 'is_active']
 
+class BusinessUsercheck(serializers.ModelSerializer):
+    class Meta:
+        model = BusinessUser
+        fields = ['id', 'first_name', 'last_name', 'company', 'user_id', 'is_active']
+
 class BusinessUserSignUpSerializer(serializers.ModelSerializer):
     user_id = serializers.CharField(
         required=True,

@@ -13,7 +13,7 @@ from .serializers import BusinessUserSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUpSerializer, BusinessUserloginSerializer as Login
+from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUpSerializer, BusinessUserloginSerializer, BusinessUsercheck
 from business_emails.serializers import BusinessUserEmailVerification as EmailVerification
 from .serializers import BusinessUserSerializer
 from django.shortcuts import get_object_or_404
@@ -110,18 +110,38 @@ class ChangePasswordView(APIView):
             return Response({'error': '새로운 비밀번호가 제공되지 않았습니다!'}, status=status.HTTP_400_BAD_REQUEST)
 
 class Login(APIView):
-    serializer_class = Login
+    serializer_class = BusinessUserloginSerializer
     def post(self, request):
+        # 유저 입력정보 받기
         user_id = request.data['user_id']
         password = request.data['password']
         try :
+            # 해당유저가 DB에 있는지 검증하기
             user = authenticate(username=user_id, password=password)
             if user is not None:
                 token = RefreshToken.for_user(user)
-                response_data = {'message': 'Login successful!'}
-                response = Response(response_data)
+                # 유저정보 찾기
+                target = BusinessUser.objects.filter(user_id=user_id).first()
+                # 바디로 토큰 내려주기
+                response = Response(
+                    {
+                        "user" : BusinessUsercheck(target).data,
+                        "message": "login success",
+                        "jwt_token": {
+                            "access_token": str(token.access_token),
+                            "refresh_token": str(token)
+                    },
+                },
+                status=status.HTTP_200_OK
+                )
+
+                # 바디로 안내리고 싶으면 reponse_data 수정하기
+                # response_data = {'message': 'Login successful!'}
+                # response = Response(response_data)
+
+                # 쿠키에 토큰 저장하기
                 response.set_cookie(key='access-token', value=str(token.access_token), httponly=True)
-                response.set_cookie(key='refrash-token', value=str(token), httponly=True)
+                response.set_cookie(key='refresh-token', value=str(token), httponly=True)
                 response.set_cookie(key='csrftoken', value=get_token(request), domain='127.0.0.1', path='/')
                 return response
             else:
