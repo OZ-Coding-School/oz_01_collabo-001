@@ -157,6 +157,7 @@ SIMPLE_JWT = {
 
 AUTHENTICATION_BACKENDS = [
     'business_users.models.BusinessUserAuth',
+    'freelancer_users.models.FreelancerUserAuth',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -177,3 +178,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 PASSWORD_RESET_TIMEOUT = 14400
+

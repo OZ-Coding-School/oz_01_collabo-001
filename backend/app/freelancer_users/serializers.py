@@ -11,7 +11,7 @@ class FreelancerUserSerializer(serializers.ModelSerializer):
 class FreelancerUsercheck(serializers.ModelSerializer):
     class Meta:
         model = FreelancerUser
-        fields = ['id', 'first_name', 'last_name', 'company', 'user_id', 'is_active']
+        fields = ['id', 'first_name', 'last_name', 'user_id', 'is_active']
 
 class FreelancerUserSignUpSerializer(serializers.ModelSerializer):
     user_id = serializers.CharField(
