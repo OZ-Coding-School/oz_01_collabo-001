@@ -1,7 +1,10 @@
 from django.core.cache import cache
+from django.contrib.auth import authenticate
+from django.middleware.csrf import get_token
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import FreelancerUserSerializer, ChangePasswordSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import FreelancerUserSerializer, ChangePasswordSerializer, FreelancerUserloginSerializer, FreelancerUsercheck
 from .serializers import FreelancerUserSignUpSerializer as SignUpSerializer
 from freelancer_emails.serializers import FreelancerUserEmailVerification as EmailVerification
 from .models import FreelancerUser
@@ -98,3 +101,43 @@ class ChangePasswordView(APIView):
                 return Response({'error': '기존 비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Login(APIView):
+    serializer_class = FreelancerUserloginSerializer
+    def post(self, request):
+        # 유저 입력정보 받기
+        user_id = request.data['user_id']
+        password = request.data['password']
+        try :
+            # 해당유저가 DB에 있는지 검증하기
+            user = authenticate(username=user_id, password=password)
+            if user is not None:
+                token = RefreshToken.for_user(user)
+                # 유저정보 찾기
+                target = FreelancerUser.objects.filter(user_id=user_id).first()
+                # 바디로 토큰 내려주기
+                response = Response(
+                    {
+                        "user" : FreelancerUsercheck(target).data,
+                        "message": "login success",
+                        "jwt_token": {
+                            "access_token": str(token.access_token),
+                            "refresh_token": str(token)
+                    },
+                },
+                status=status.HTTP_200_OK
+                )
+
+                # 바디로 안내리고 싶으면 reponse_data 수정하기
+                # response_data = {'message': 'Login successful!'}
+                # response = Response(response_data)
+
+                # 쿠키에 토큰 저장하기
+                response.set_cookie(key='access-token', value=str(token.access_token), httponly=True)
+                response.set_cookie(key='refresh-token', value=str(token), httponly=True)
+                response.set_cookie(key='csrftoken', value=get_token(request), domain='127.0.0.1', path='/')
+                return response
+            else:
+                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        except :
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
