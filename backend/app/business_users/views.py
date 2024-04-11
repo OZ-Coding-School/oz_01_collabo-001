@@ -5,15 +5,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import NotFound
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import BusinessUser
-from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUp, ChangePasswordSerializer
 from business_emails.serializers import BusinessUserEmailVerification as EmailVerification
 from .serializers import BusinessUserSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUpSerializer, BusinessUserloginSerializer, BusinessUsercheck
+from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUpSerializer, ChangePasswordSerializer, BusinessUserloginSerializer, BusinessUsercheck
 from business_emails.serializers import BusinessUserEmailVerification as EmailVerification
 from .serializers import BusinessUserSerializer
 from django.shortcuts import get_object_or_404
