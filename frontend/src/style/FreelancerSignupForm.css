@@ -1,0 +1,164 @@
+label {
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+
+.signup__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.signup__form {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  margin: 24px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.signup__form select {
+  width: 100%;
+}
+
+.signup__form__name-group {
+  display: flex;
+  gap: 1px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* email */
+.signup__form__email-group {
+  display: flex;
+  gap: 1px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signup__form__email-group Input {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+/* mobile */
+.signup__form__phone-group {
+  display: flex;
+  gap: 1px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signup__form__phone-group SelectComponent {
+  flex-grow: 1;
+}
+
+.signup__form__phone-group Input {
+  flex-grow: 3;
+}
+
+.signup__form__phone-group Button {
+  flex-grow: 1;
+}
+
+/* 국가 */
+
+/* 약관 */
+
+.checkbox-group {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.form-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px; /* Adjust the max width as needed */
+  margin: 0 auto;
+}
+
+.form-section-title {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.checkbox-group {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.checkbox-label div {
+  display: inline; /* 블록 요소 대신 인라인으로 처리 */
+}
+
+.checkbox-label a {
+  color: #0066cc; /* 링크 색상, 원하는 색상으로 조정 */
+  text-decoration: underline; /* 밑줄 */
+  cursor: pointer; /* 마우스 오버 시 포인터 모양으로 변경 */
+  margin: 0 4px; /* 링크 주변 간격 조정 */
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center; /* 세로 중심 정렬 */
+  gap: 0.5rem; /* 체크박스와 텍스트 사이의 간격 */
+}
+
+.agreement-text {
+  display: block; /* 또는 'flex'를 사용하여 자식 요소를 세로 중심 정렬 */
+  text-align: left;
+}
+
+.text-block a {
+  white-space: nowrap; /* 링크 텍스트 줄바꿈 방지 */
+  margin: 0 0.25rem; /* 링크 사이 간격 조정 */
+}
+
+.text-block {
+  display: block; /* 블록 레벨 요소로 만들어 줄바꿈 적용 */
+}
+
+.separator {
+  border: none;
+  height: 1px;
+  background-color: #ccc;
+  margin: 10px 0;
+}
+
+.arrow {
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* */
+
+/* name-group, email-group과 같은 그룹 요소에 대한 공통 스타일링 */
+.group {
+  display: flex;
+  gap: 8px; /* 필요한 경우 조정 */
+  align-items: center; /* 세로 정렬 */
+}
+
+/* 버튼을 포함하는 그룹에 'flex-grow' 속성 적용 */
+.group input,
+.group button {
+  flex-grow: 1;
+}
+
+/* Input과 Button이 함께 있는 경우 Button에 마진을 주어 분리 */
+.group button {
+  margin-left: 8px; /* 필요한 경우 조정 */
+}
