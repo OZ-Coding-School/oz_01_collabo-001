@@ -35,4 +35,4 @@ ENV PATH="/backend/scripts:/py/bin/:$PATH"
 
 USER django-user
 
-CMD ["run.sh"]
+CMD ["sh", "./backend/scripts/run.sh"]
