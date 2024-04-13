@@ -31,7 +31,7 @@ RUN python -m venv /py && \
     chmod -R 755 /vol/web && \ 
     chmod -R +x /scripts 
 
-ENV PATH="backend/scripts:/py/bin/:$PATH"
+ENV PATH="/backend/scripts:/py/bin/:$PATH"
 
 USER django-user
 
