@@ -11,7 +11,7 @@ COPY ./backend/scripts /scripts
 
 # 작업시 /app 이 자동으로 붙는다
 WORKDIR /app
-EXPOSE 8000
+EXPOSE 80
 
 ARG DEV=false
 RUN python -m venv /py && \
