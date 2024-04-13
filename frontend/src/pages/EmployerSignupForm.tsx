@@ -3,6 +3,7 @@ import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import Modal from "../components/Modal";
 import SelectComponent from "../components/Select/SelectComponent";
+import useUserIdCheck from "../hooks/useUserIdCheck";
 import "../style/FreelancerSignupForm.css";
 
 const countryCodes = [
@@ -22,6 +23,34 @@ const EmployerSignupForm = () => {
   const [selectedCountryCodes, setSelectedCountryCodes] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // id 중복체크를 위한 상태 관리
+  const [userId, setUserId] = useState("");
+
+  const {
+    mutate: checkUserId,
+    status,
+    isError,
+    error,
+    data: isValidId,
+  } = useUserIdCheck();
+
+  const isLoading = status === "pending";
+
+  const handleUserIdCheck = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!userId) {
+      alert("Please enter your user ID.");
+      return;
+    }
+    checkUserId(userId);
+  };
+
+  // 사용자가 입력한 ID 값이 변경될 때마다 호출되는 함수
+  const handleUserIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
+    setUserId(event.target.value);
+  };
+
   const handleChange = (newValue: string) => {
     setSelectedCountryCodes(newValue);
     console.log(`Selected: ${newValue}`);
@@ -31,6 +60,7 @@ const EmployerSignupForm = () => {
     e.preventDefault();
     setIsModalOpen(true);
   };
+
   const closeModal = () => setIsModalOpen(false);
 
   return (
@@ -39,11 +69,27 @@ const EmployerSignupForm = () => {
       <form className="signup__form">
         {/* 아이디 */}
         <label htmlFor="User ID">User ID</label>
-        <hr />
-        <Input type="text" placeholder="Create a user ID." />
+        <div className="signup__form__id-group group">
+          <Input
+            type="text"
+            placeholder="Create a user ID."
+            onChange={handleUserIdChange}
+            disabled={isLoading}
+          />
+
+          <Button size={"sm"} variant={"primary"} onClick={handleUserIdCheck}>
+            {isLoading ? "Checking..." : "Verify"}
+          </Button>
+          {isError && <p>Error checking ID: {error.message}</p>}
+          {isValidId !== undefined && (
+            <p>ID is {isValidId ? "valid" : "invalid"}</p>
+          )}
+        </div>
         {/* 비밀번호 */}
         <label htmlFor="Password">Password</label>
-        <Input type="text" placeholder="Create a user ID." />
+        <Input type="text" placeholder="Create a your passowrd." />
+        {/* 비밀번호 확인*/}
+        <Input type="text" placeholder="Confirm your passowrd." />
         {/* 이름 */}
         <label htmlFor="Full Name">Full Name</label>
         <div className="signup__form__name-group group">
