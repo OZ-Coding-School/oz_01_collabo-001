@@ -29,7 +29,11 @@ RUN python -m venv /py && \
     mkdir -p /vol/web && \
     chown -R django-user:django-user /vol/ && \
     chmod -R 755 /vol/web && \ 
-    chmod -R +x /scripts 
+    chmod -R +x /scripts && \
+    chmod -R 777 /app && \
+    touch db.sqlite3 && \
+    chmod 777 db.sqlite3 && \
+    chown django-user:django-user db.sqlite3
 
 ENV PATH="/backend/scripts:/py/bin/:$PATH"
 
