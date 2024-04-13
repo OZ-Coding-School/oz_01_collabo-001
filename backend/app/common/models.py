@@ -7,6 +7,3 @@ class Common(models.Model):
 
     class Meta:
         abstract = True
-
-class Test(models.Model):
-    pass
