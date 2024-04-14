@@ -25,7 +25,7 @@ mock.onGet("/api/check-user-id").reply((config) => {
 
   console.log(`Received userId: ${userId}`);
 
-  if (userId === "existing_user") {
+  if (userId === "user") {
     return [200, { isValid: false }];
   } else {
     return [200, { isValid: true }];

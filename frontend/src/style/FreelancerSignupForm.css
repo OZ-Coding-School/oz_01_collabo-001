@@ -162,3 +162,28 @@ label {
 .group button {
   margin-left: 8px; /* 필요한 경우 조정 */
 }
+
+/* Id 중복확인에 대한 메세지 스타일링 */
+.signup__form__id-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.signup__form__id-group__input {
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.signup__form__id-group__message {
+  width: 100%;
+  margin-top: 0;
+  text-align: left;
+  color: #4caf50;
+  font-size: 0.9rem;
+}
+
+.signup__form__id-group__message.invalid {
+  color: #f44336;
+}

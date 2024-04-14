@@ -3,7 +3,6 @@ import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import Modal from "../components/Modal";
 import SelectComponent from "../components/Select/SelectComponent";
-import useUserIdCheck from "../hooks/useUserIdCheck";
 import "../style/FreelancerSignupForm.css";
 
 const countryCodes = [
@@ -19,37 +18,9 @@ const countries = [
   { value: "us", label: "미국" },
 ];
 
-const EmployerSignupForm = () => {
+const FreelancerSignupForm = () => {
   const [selectedCountryCodes, setSelectedCountryCodes] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // id 중복체크를 위한 상태 관리
-  const [userId, setUserId] = useState("");
-
-  const {
-    mutate: checkUserId,
-    status,
-    isError,
-    error,
-    data: isValidId,
-  } = useUserIdCheck();
-
-  const isLoading = status === "pending";
-
-  const handleUserIdCheck = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!userId) {
-      alert("Please enter your user ID.");
-      return;
-    }
-    checkUserId(userId);
-  };
-
-  // 사용자가 입력한 ID 값이 변경될 때마다 호출되는 함수
-  const handleUserIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
-    setUserId(event.target.value);
-  };
 
   const handleChange = (newValue: string) => {
     setSelectedCountryCodes(newValue);
@@ -60,7 +31,6 @@ const EmployerSignupForm = () => {
     e.preventDefault();
     setIsModalOpen(true);
   };
-
   const closeModal = () => setIsModalOpen(false);
 
   return (
@@ -69,44 +39,10 @@ const EmployerSignupForm = () => {
       <form className="signup__form">
         {/* 아이디 */}
         <label htmlFor="User ID">User ID</label>
-        <div className="signup__form__id-group group">
-          <Input
-            type="text"
-            placeholder="Create a user ID."
-            onChange={handleUserIdChange}
-          />
-          <Button
-            size={"sm"}
-            variant={
-              isLoading
-                ? "primary"
-                : isValidId !== undefined
-                ? isValidId
-                  ? "secondary" // 'valid'는 유효한 ID일 때 적용될 새로운 스타일 변형
-                  : "tertiary" // 'invalid'는 유효하지 않은 ID일 때 적용될 새로운 스타일 변형
-                : "primary" // isLoading이나 isValidId가 undefined일 때 기본값
-            }
-            onClick={handleUserIdCheck}
-            disabled={isLoading || !userId}
-          >
-            {isLoading ? "Checking..." : "Verify"}
-          </Button>
-          <div
-            className={`signup__form__id-group__message ${
-              isValidId ? "" : "invalid"
-            }`}
-          >
-            {isError && <p>Error checking ID: {error.message}</p>}
-            {isValidId !== undefined && (
-              <span>ID is {isValidId ? "valid" : "invalid"}</span>
-            )}
-          </div>
-        </div>
+        <Input type="text" placeholder="Create a user ID." />
         {/* 비밀번호 */}
         <label htmlFor="Password">Password</label>
-        <Input type="text" placeholder="Create a your passowrd." />
-        {/* 비밀번호 확인*/}
-        <Input type="text" placeholder="Confirm your passowrd." />
+        <Input type="text" placeholder="Create a password." />
         {/* 이름 */}
         <label htmlFor="Full Name">Full Name</label>
         <div className="signup__form__name-group group">
@@ -155,17 +91,38 @@ const EmployerSignupForm = () => {
           onChange={handleChange}
         />
         {/* 약관 */}
-        <label className="checkbox-label">
-          <input type="checkbox" />
-          <span className="agreement-text">
-            I agree to the 플라잉 피그
-            <span className="text-block">
-              <a onClick={openModal}>User Agreement</a> and
-              <a onClick={openModal}>Privacy Policy.</a>
+        <div className="checkbox-group">
+          <h2 className="form-section-title">약관</h2>
+          <label className="checkbox-label">
+            <input type="checkbox" />
+            모두 동의합니다.
+          </label>
+          <hr className="separator" />
+          <label className="checkbox-label">
+            <input type="checkbox" />
+            (필수) 서비스 이용 약관에 동의
+            <span
+              className="arrow"
+              onClick={(e) => {
+                openModal(e);
+              }}
+            >
+              {">"}
             </span>
-          </span>
-        </label>
-
+          </label>
+          <label className="checkbox-label">
+            <input type="checkbox" />
+            (필수) 개인정보 수집 및 이용에 동의
+            <span
+              className="arrow"
+              onClick={(e) => {
+                openModal(e);
+              }}
+            >
+              {">"}
+            </span>
+          </label>
+        </div>
         <Button size={"lg"} variant={"primary"}>
           Join
         </Button>
@@ -180,15 +137,4 @@ const EmployerSignupForm = () => {
   );
 };
 
-export default EmployerSignupForm;
-
-/*
-
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "outlinePrimary"
-  | "outlineSecondary"
-  | "outlineTertiary";
-
-  */
+export default FreelancerSignupForm;
