@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Button from "../components/Button/Button";
+import ErrorMessage from "../components/ErrorMessage";
 import Input from "../components/Input/Input";
 import Modal from "../components/Modal";
 import SelectComponent from "../components/Select/SelectComponent";
@@ -19,12 +21,33 @@ const countries = [
   { value: "us", label: "미국" },
 ];
 
+interface EmployerSignupFormInputs {
+  userId: string;
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
+  company: string;
+  email: string;
+  mobile: string;
+  country: string;
+  language: string;
+  agreeToTerms: boolean;
+}
+
 const EmployerSignupForm = () => {
   const [selectedCountryCodes, setSelectedCountryCodes] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // id 중복체크를 위한 상태 관리
-  const [userId, setUserId] = useState("");
+  // const { control, handleSubmit, watch } = useForm<EmployerSignupFormInputs>();
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<EmployerSignupFormInputs>({
+    mode: "onChange", // or 'onBlur'
+  });
 
   const {
     mutate: checkUserId,
@@ -38,17 +61,12 @@ const EmployerSignupForm = () => {
 
   const handleUserIdCheck = (e: React.MouseEvent) => {
     e.preventDefault();
+    const userId = watch("userId");
     if (!userId) {
       alert("Please enter your user ID.");
       return;
     }
     checkUserId(userId);
-  };
-
-  // 사용자가 입력한 ID 값이 변경될 때마다 호출되는 함수
-  const handleUserIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
-    setUserId(event.target.value);
   };
 
   const handleChange = (newValue: string) => {
@@ -61,19 +79,27 @@ const EmployerSignupForm = () => {
     setIsModalOpen(true);
   };
 
+  // 폼 제출
+  const onSubmit: SubmitHandler<EmployerSignupFormInputs> = (data) => {
+    console.log(data);
+  };
+
   const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="signup__container">
       <h3>회원 가입하고 모집 등록을 완료하세요!</h3>
-      <form className="signup__form">
+      <form className="signup__form" onSubmit={handleSubmit(onSubmit)}>
         {/* 아이디 */}
         <label htmlFor="User ID">User ID</label>
         <div className="signup__form__id-group group">
-          <Input
-            type="text"
-            placeholder="Create a user ID."
-            onChange={handleUserIdChange}
+          <Controller
+            name="userId"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Input type="text" placeholder="Create a user ID." {...field} />
+            )}
           />
           <Button
             size={"sm"}
@@ -82,12 +108,12 @@ const EmployerSignupForm = () => {
                 ? "primary"
                 : isValidId !== undefined
                 ? isValidId
-                  ? "secondary" // 'valid'는 유효한 ID일 때 적용될 새로운 스타일 변형
-                  : "tertiary" // 'invalid'는 유효하지 않은 ID일 때 적용될 새로운 스타일 변형
+                  ? "secondary" // 'secondary'는 유효한 ID
+                  : "tertiary" // 'tertiary'는 유효하지 않은 ID
                 : "primary" // isLoading이나 isValidId가 undefined일 때 기본값
             }
             onClick={handleUserIdCheck}
-            disabled={isLoading || !userId}
+            disabled={isLoading || !watch("userId")}
           >
             {isLoading ? "Checking..." : "Verify"}
           </Button>
@@ -104,9 +130,58 @@ const EmployerSignupForm = () => {
         </div>
         {/* 비밀번호 */}
         <label htmlFor="Password">Password</label>
-        <Input type="text" placeholder="Create a your passowrd." />
-        {/* 비밀번호 확인*/}
-        <Input type="text" placeholder="Confirm your passowrd." />
+        <Controller
+          name="password"
+          control={control}
+          rules={{
+            required: true,
+            minLength: {
+              value: 12,
+              message: "Password must be at least 12 characters long.",
+            },
+            pattern: {
+              value:
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/,
+              message:
+                "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.",
+            },
+          }}
+          render={({ field, fieldState }) => (
+            <>
+              <Input
+                type="password"
+                placeholder="Create your password."
+                {...field}
+              />
+              {fieldState.error && (
+                <ErrorMessage message={fieldState.error.message} />
+              )}
+            </>
+          )}
+        />
+
+        {/* 비밀번호 확인 */}
+        <Controller
+          name="confirmPassword"
+          control={control}
+          rules={{
+            required: true,
+            validate: (value) =>
+              value === watch("password") || "Passwords do not match.",
+          }}
+          render={({ field, fieldState }) => (
+            <>
+              <Input
+                type="password"
+                placeholder="Confirm your password."
+                {...field}
+              />
+              {fieldState.error && (
+                <ErrorMessage message={fieldState.error.message} />
+              )}
+            </>
+          )}
+        />
         {/* 이름 */}
         <label htmlFor="Full Name">Full Name</label>
         <div className="signup__form__name-group group">
