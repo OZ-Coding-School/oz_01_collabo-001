@@ -8,6 +8,7 @@ COPY ./backend/requirements.txt /tmp/requirements.txt
 COPY ./backend/requirements.dev.txt /tmp/requirements.dev.txt
 COPY ./backend/app /app
 COPY ./backend/scripts /scripts
+COPY .env /app/.env
 
 # 작업시 /app 이 자동으로 붙는다
 WORKDIR /app
