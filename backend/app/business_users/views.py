@@ -12,7 +12,7 @@ from .serializers import BusinessUserSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUpSerializer, ChangePasswordSerializer, BusinessUserloginSerializer, BusinessUsercheck
+from .serializers import BusinessUserSerializer, BusinessUserSignUpSerializer as SignUpSerializer, ChangePasswordSerializer, BusinessUserloginSerializer, BusinessUsercheck, BusinessUserCheckIDSerializer
 from business_emails.serializers import BusinessUserEmailVerification as EmailVerification
 from .serializers import BusinessUserSerializer
 from django.shortcuts import get_object_or_404
@@ -81,6 +81,16 @@ class SignUp(APIView):
         except Exception as e:
             return Response({ "message" : str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+class CheckUserID(APIView):
+    serializer_class = BusinessUserCheckIDSerializer
+    def post(self, request):
+        user_id = request.data.get("user_id")
+        db_user_id = BusinessUser.objects.filter(user_id=user_id).first()
+        if not user_id:
+            return Response({"message" : "Please enter an ID"}, status=status.HTTP_400_BAD_REQUEST)
+        elif db_user_id:
+            return Response({"message" : "This ID is already in use"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message" : "This ID is available for use"}, status=status.HTTP_200_OK)
 
 
 class ChangePasswordView(APIView):
