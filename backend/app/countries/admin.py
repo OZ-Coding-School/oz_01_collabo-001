@@ -5,4 +5,5 @@ from .models import Country
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'country_name', 'code',)
+    list_display = ('id', 'en_name', 'kr_name','code', 'number', )
+    fields = ('en_name', 'kr_name', 'code', 'number')

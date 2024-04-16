@@ -14,8 +14,10 @@ class Migration(migrations.Migration):
             name="Country",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("country_name", models.CharField(max_length=50)),
-                ("code", models.CharField(max_length=50)),
+                ("en_name", models.CharField(max_length=50)),
+                ("kr_name", models.CharField(max_length=50)),
+                ("code", models.CharField(max_length=3)),
+                ("number", models.CharField(max_length=5)),
             ],
         ),
     ]

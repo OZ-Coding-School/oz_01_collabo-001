@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/v1/business_user/', include('business_users.urls')),
     path('api/v1/freelancer_user/email/', include('freelancer_emails.urls'), name = 'freelancer_email'),
     path('api/v1/business_users/email/', include('business_emails.urls'), name = 'business_email'),
+    path('api/v1/Country/', include('countries.urls'), name = 'countries'),
 ]
