@@ -7,6 +7,7 @@ from .serializers import CountrySerializer, SelectCountryENNameSerializer, Selec
 
 
 class CreateCountry(APIView):
+    serializer_class = CountrySerializer
     def post(self, requst):
         serializer = CountrySerializer(data=requst.data)
         if serializer.is_valid():
