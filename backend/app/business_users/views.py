@@ -1,8 +1,6 @@
 from django.core.cache import cache
 from django.contrib.auth import authenticate
 from django.middleware.csrf import get_token
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -38,7 +36,6 @@ class UserDetail(APIView):
 
 class SignUp(APIView):
     serializer_class = SignUpSerializer
-    @method_decorator(csrf_exempt)
     def post(self, request):
         try:
             # 이메일 인증 테이블에 유저가 입력한 email 데이터가 있는지 확인

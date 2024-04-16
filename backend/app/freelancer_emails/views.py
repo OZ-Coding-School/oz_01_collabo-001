@@ -3,8 +3,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.mail import EmailMessage
 from django.core.cache import cache
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from .serializers import FreelancerUserEmail as UserEmail, FreelancerUserTokenVerification as TokenVerification
 from datetime import datetime
 import uuid
@@ -19,7 +17,6 @@ class SendEmail(APIView):
         numeric_token = int(uuid_str, 16) % 900000 + 100000
         return numeric_token
     serializer_class = UserEmail
-    @method_decorator(csrf_exempt)
     def post(self, request):
         # 정보 직렬화
         serializer = UserEmail(data=request.data)
@@ -46,7 +43,6 @@ class SendEmail(APIView):
     
 class VerifyEmail(APIView):
     serializer_class = TokenVerification
-    @method_decorator(csrf_exempt)
     def post(self, request):
         token_serializer = TokenVerification(data=request.data)
         if token_serializer.is_valid():
