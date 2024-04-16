@@ -72,3 +72,6 @@ class BusinessUserloginSerializer(serializers.Serializer):
         write_only=True,
         required=True
     )
+
+class BusinessUserCheckIDSerializer(serializers.Serializer):
+    user_id = serializers.CharField(required=True)
