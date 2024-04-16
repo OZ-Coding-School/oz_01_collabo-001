@@ -85,9 +85,7 @@ class CheckUserID(APIView):
     serializer_class = BusinessUserCheckIDSerializer
     def post(self, request):
         user_id = request.data.get("user_id")
-        print(user_id)
         db_user_id = BusinessUser.objects.filter(user_id=user_id).first()
-        print(db_user_id)
         if not user_id:
             return Response({"message" : "Please enter an ID"}, status=status.HTTP_400_BAD_REQUEST)
         elif db_user_id:

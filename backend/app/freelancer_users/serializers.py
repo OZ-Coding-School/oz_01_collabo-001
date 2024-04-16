@@ -71,3 +71,6 @@ class FreelancerUserloginSerializer(serializers.Serializer):
         write_only=True,
         required=True
     )
+
+class FreelancerUserCheckIDSerializer(serializers.Serializer):
+    user_id = serializers.CharField(required=True)

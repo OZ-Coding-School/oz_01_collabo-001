@@ -4,7 +4,7 @@ from django.middleware.csrf import get_token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import FreelancerUserSerializer, ChangePasswordSerializer, FreelancerUserloginSerializer, FreelancerUsercheck
+from .serializers import FreelancerUserSerializer, ChangePasswordSerializer, FreelancerUserloginSerializer, FreelancerUsercheck, FreelancerUserCheckIDSerializer
 from .serializers import FreelancerUserSignUpSerializer as SignUpSerializer
 from freelancer_emails.serializers import FreelancerUserEmailVerification as EmailVerification
 from .models import FreelancerUser
@@ -78,6 +78,17 @@ class SignUp(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({ "message" : str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class CheckUserID(APIView):
+    serializer_class = FreelancerUserCheckIDSerializer
+    def post(self, request):
+        user_id = request.data.get("user_id")
+        db_user_id = FreelancerUser.objects.filter(user_id=user_id).first()
+        if not user_id:
+            return Response({"message" : "Please enter an ID"}, status=status.HTTP_400_BAD_REQUEST)
+        elif db_user_id:
+            return Response({"message" : "This ID is already in use"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message" : "This ID is available for use"}, status=status.HTTP_200_OK)
 
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]  # 인증된 사용자만 비밀번호 변경을 허용
