@@ -52,21 +52,46 @@ label {
 /* mobile */
 .signup__form__phone-group {
   display: flex;
-  gap: 1px;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start; /* 좌측 정렬을 위해 변경 */
+  gap: 8px; /* 요소 간 간격 */
 }
 
 .signup__form__phone-group SelectComponent {
   flex-grow: 1;
 }
 
-.signup__form__phone-group Input {
-  flex-grow: 3;
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 여기도 좌측 정렬을 위해 변경 */
+  width: 100%; /* 전체 너비를 부모와 동일하게 설정 */
 }
 
-.signup__form__phone-group Button {
-  flex-grow: 1;
+.input-container .errorMessage {
+  width: 100%; /* 오류 메시지의 너비를 부모와 같게 설정 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  color: red; /* 오류 메시지 색상 */
+  margin-top: 4px; /* 입력 필드와 오류 메시지 사이의 여백 */
+  margin-bottom: 4px; /* 오류 메시지와 다음 요소 사이의 여백 추가 */
+}
+
+/* 선택 컴포넌트와 입력 필드가 같은 줄에 위치하기 위한 추가 스타일 */
+.select-input-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.select-component,
+.input-with-error-message {
+  flex: 1; /* flex-grow를 활용하여 공간을 균등하게 배분 */
+}
+
+.input-with-error-message {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px; /* 선택 컴포넌트와의 간격을 위해 추가 */
 }
 
 /* 국가 */
@@ -186,4 +211,11 @@ label {
 
 .signup__form__id-group__message.invalid {
   color: #f44336;
+}
+
+/* 오류 메시지가 없을 때도 공간을 차지하는 투명한 텍스트 */
+.noErrorMessage::after {
+  content: "";
+  display: block;
+  min-height: 20px;
 }

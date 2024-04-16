@@ -379,10 +379,10 @@ const EmployerSignupForm = () => {
               name="verificationCode"
               control={control}
               rules={{
-                required: "인증번호를 입력해주세요.",
+                required: "Enter your code number.",
                 pattern: {
                   value: /^[0-9]{6}$/,
-                  message: "인증번호는 6자리 숫자입니다.",
+                  message: "Verification code is 6 digits.", // "인증번호는 6자리 숫자입니다.",
                 },
               }}
               render={({ field, fieldState }) => (
@@ -424,17 +424,46 @@ const EmployerSignupForm = () => {
         )}
         {/* 전화번호 */}
         <label htmlFor="Mobile">Mobile</label>
-        <div className="signup__form__phone-group group">
-          <SelectComponent
-            label=""
-            options={countryCodes}
-            selected={selectedCountryCodes}
-            onChange={handleChangeCountryCode}
-          />
-          <Input type="text" placeholder="Enter your mobile number." />
-          <Button size={"sm"} variant={"primary"}>
-            Verify
-          </Button>
+        {/* <div className="signup__form__phone-group group"> */}
+        <div className="signup__form__input-group">
+          <div className="select-input-container">
+            <SelectComponent
+              label=""
+              options={countryCodes}
+              selected={selectedCountryCodes}
+              onChange={handleChangeCountryCode}
+            />
+            <div className="input-with-error-message">
+              <Controller
+                name="mobile"
+                control={control}
+                rules={{
+                  required: "Enter your mobile number.",
+                  pattern: {
+                    value: /^[0-9]+$/, // 정규식 패턴을 필요에 맞게 조정하세요
+                    message: "Please enter only numbers.",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Input
+                      type="tel"
+                      placeholder="Enter your mobile number."
+                      {...field}
+                    />
+                    {fieldState.error && (
+                      <div className="errorMessage">
+                        <ErrorMessage message={fieldState.error.message} />
+                      </div>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+            <Button size={"sm"} variant={"primary"}>
+              Verify
+            </Button>
+          </div>
         </div>
         {/* 국가 */}
         <label htmlFor="Country">Country</label>
