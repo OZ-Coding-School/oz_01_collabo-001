@@ -45,6 +45,7 @@ DJANGO_BASIC_APPS = [
 ADDITIONAL_LIBRARY_APPS = [
     'drf_spectacular',
     'rest_framework',
+    'corsheaders',
 ]
 
 CUSTOM_USER_APPS = [
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "FLYING_PIG.urls"
@@ -179,3 +181,5 @@ EMAIL_USE_TLS = True
 
 PASSWORD_RESET_TIMEOUT = 14400
 
+CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:5173', 'http://localhost:5173')
+CORS_ALLOW_CREDENTIALS = True
