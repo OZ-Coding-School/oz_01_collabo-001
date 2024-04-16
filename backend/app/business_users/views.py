@@ -151,9 +151,32 @@ class Login(APIView):
                 # 쿠키에 토큰 저장하기
                 response.set_cookie(key='access-token', value=str(token.access_token), httponly=True)
                 response.set_cookie(key='refresh-token', value=str(token), httponly=True)
-                response.set_cookie(key='csrftoken', value=get_token(request), domain='127.0.0.1', path='/')
+                # response.set_cookie(key='csrftoken', value=get_token(request), domain='127.0.0.1', path='/')
                 return response
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         except :
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class Logout(APIView):
+    def post(self, request):
+        try:
+            # 쿠키에서 토큰 가져오기
+            access_token = request.COOKIES.get('access-token')
+            refresh_token = request.COOKIES.get('refresh-token')
+
+            # 토큰 만료시키기
+            if access_token:
+                token = RefreshToken(access_token)
+                token.blacklist()
+
+            if refresh_token:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+
+            response = Response({'message': 'Loggout success'}, status=status.HTTP_200_OK)
+            response.delete_cookie('access-token')
+            response.delete_cookie('refresh-token')
+            return response
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
