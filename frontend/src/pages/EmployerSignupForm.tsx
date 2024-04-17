@@ -57,7 +57,7 @@ const EmployerSignupForm = () => {
     control,
     handleSubmit,
     watch,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<EmployerSignupFormInputs>({
     mode: "onChange", // or 'onBlur'
   });
@@ -69,7 +69,11 @@ const EmployerSignupForm = () => {
     // isError: isCheckUserIdError,
     // error: checkUserIdError,
     data: isValidId,
+    reset: resetCheckUserId,
   } = useUserIdCheck();
+
+  // userId 필드의 값을 감시
+  const watchedUserId = watch("userId");
 
   // const isLoading = status === "pending";
   const isCheckUserIdLoading = checkUserIdStatus === "pending";
@@ -104,8 +108,6 @@ const EmployerSignupForm = () => {
 
   // 렌더링 후 실행
   useEffect(() => {
-    // console.log("EmployerSignupForm rendered");
-    // console.log("isSendVerificationSuccess:", isSendVerificationSuccess);
     let interval: ReturnType<typeof setInterval>;
     if (isSendVerificationSuccess) {
       interval = setInterval(() => {
@@ -126,6 +128,12 @@ const EmployerSignupForm = () => {
       setCountries(codes);
     });
   }, []);
+
+  // userId 값이 변경될 때마다 실행
+  // userId 값이 변경되면 useMutation의 상태를 초기화가 되고 isValidId 값도 초기화됨
+  useEffect(() => {
+    resetCheckUserId();
+  }, [watchedUserId, resetCheckUserId]);
 
   // 이메일 인증 코드 확인
   const handleSendVerificationCode = (e: React.MouseEvent<HTMLElement>) => {
@@ -233,23 +241,34 @@ const EmployerSignupForm = () => {
                   message: "User ID must contain only alphanumeric characters.",
                 },
               }}
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <>
                   <Input
                     type="text"
                     placeholder="Create a user ID."
                     {...field}
                   />
+
+                  {/* 유효성 검사 오류 메시지 */}
+                  {fieldState.error && (
+                    <div className="errorMessage">
+                      <ErrorMessage message={fieldState.error.message} />
+                    </div>
+                  )}
                   {/* 성공 메시지 */}
-                  {isValidId?.isValid && (
+                  {!fieldState.error && isValidId?.isValid && (
                     <span className="success-message">
                       {isValidId.message || "This ID is available."}
                     </span>
                   )}
-                  {/* 오류 메시지 */}
-                  {!isValidId?.isValid && (
+                  {/* 실패 메시지 */}
+                  {!fieldState.error && isValidId?.isValid === false && (
                     <div className="errorMessage">
-                      <ErrorMessage message={isValidId?.message} />
+                      <ErrorMessage
+                        message={
+                          isValidId.message || "This ID is already taken."
+                        }
+                      />
                     </div>
                   )}
                 </>
