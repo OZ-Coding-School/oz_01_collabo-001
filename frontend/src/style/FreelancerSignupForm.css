@@ -61,11 +61,31 @@ label {
   flex-grow: 1;
 }
 
+.input-button-container {
+  display: flex;
+  align-items: center; /* 버튼과 인풋을 중앙 정렬 */
+  gap: 8px; /* 버튼과 인풋 사이의 간격 */
+}
+
 .input-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* 여기도 좌측 정렬을 위해 변경 */
+  /* align-items: flex-start; 여기도 좌측 정렬을 위해 변경 */
   width: 100%; /* 전체 너비를 부모와 동일하게 설정 */
+}
+
+.success-message {
+  color: green; /* 긍정적 메시지 색상 */
+  font-size: 0.8em;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.success-message::before {
+  content: "✔"; /* 체크 마크 아이콘 */
+  font-size: 1em;
+  margin-right: 5px;
 }
 
 .input-container .errorMessage {

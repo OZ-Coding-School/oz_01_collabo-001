@@ -1,50 +1,26 @@
 import { AxiosInstance } from "axios";
 import MockAdapter from "axios-mock-adapter";
 
-console.log("Setting up mock adapter");
-
 export function setupMocks(axiosInstance: AxiosInstance) {
-  // axios 인스턴스에 MockAdapter 연결
-  const mock = new MockAdapter(axiosInstance);
+  const mock = new MockAdapter(axiosInstance, { onNoMatch: "passthrough" });
 
-  console.log("Setting up mock response");
-
+  mock.onPost("/api/v1/business_user/checkid/").passThrough();
   // ID 중복 검사 모의 응답 설정
+  /*
   mock.onGet("/api/check-user-id").reply((config) => {
-    console.log("Intercepted request with config:", config);
-
     const params = new URLSearchParams(config.params);
     const userId = params.get("userId");
 
-    console.log(`Received userId: ${userId}`);
-
-    if (userId === "user") {
-      return [200, { isValid: false }];
+    if (userId === "existingUser") {
+      return [200, { isValid: false }]; // 이미 존재하는 유저 ID
     } else {
-      return [200, { isValid: true }];
-    }
-  });
-
-  /*
-  // 이메일 인증코드 발송 요청에 대한 모의 응답 설정
-  mock.onPost("/api/v1/business_users/email/sendemail/").reply((config) => {
-    console.log("Email send request:", config);
-    return [200, { message: "Verification code sent successfully." }];
-  });
-
-  // 이메일 인증코드 검증 요청에 대한 모의 응답 설정
-  mock.onPost("/api/v1/business_users/email/verifyemail/").reply((config) => {
-    try {
-      const data = JSON.parse(config.data);
-      console.log("Email verification request:", data);
-
-      return data.token === "123456"
-        ? [200, { verified: true }]
-        : [400, { verified: false, message: "Invalid code" }];
-    } catch (error) {
-      console.error("Error parsing data:", error);
-      return [500, { message: "Internal server error" }];
+      return [200, { isValid: true }]; // 사용 가능한 유저 ID
     }
   });
   */
+
+  // 구현된 API 경로에 대해서는 모의 응답 설정을 하지 않습니다.
+  // 예시: '/api/v1/business_users/email/sendemail/' 경로는 백엔드에서 구현되었다고 가정합니다.
+  // mock.onPost("/api/v1/business_users/email/sendemail/").passthrough();
+  // .onNoMatch: "passthrough" 옵션은 처리되지 않은 모든 요청에 대해 실제 네트워크 요청으로 전달되도록 설정
 }

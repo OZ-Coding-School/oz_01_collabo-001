@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { getCountryCodes } from "../api/signupUserApi";
 import Button from "../components/Button/Button";
 import ErrorMessage from "../components/ErrorMessage";
 import Input from "../components/Input/Input";
@@ -8,20 +9,8 @@ import SelectComponent from "../components/Select/SelectComponent";
 import { useSendVerificationCode } from "../hooks/useSendVerificationCode";
 import useUserIdCheck from "../hooks/useUserIdCheck";
 import { useVerifyEmailCode } from "../hooks/useVerifyEmailCode";
+import { CountryCode } from "../interface/types";
 import "../style/FreelancerSignupForm.css";
-
-const countryCodes = [
-  { value: "+82", label: "한국 (+82)" },
-  { value: "+1", label: "미국/캐나다 (+1)" },
-  { value: "+81", label: "일본 (+81)" },
-  { value: "+86", label: "중국 (+86)" },
-  { value: "+44", label: "영국 (+44)" },
-];
-
-const countries = [
-  { value: "kr", label: "한국" },
-  { value: "us", label: "미국" },
-];
 
 interface EmployerSignupFormInputs {
   userId: string;
@@ -38,7 +27,27 @@ interface EmployerSignupFormInputs {
   verificationCode?: string;
 }
 
+/*
+const countryCodes = [
+  { value: "+82", label: "한국 (+82)" },
+  { value: "+1", label: "미국/캐나다 (+1)" },
+  { value: "+81", label: "일본 (+81)" },
+  { value: "+86", label: "중국 (+86)" },
+  { value: "+44", label: "영국 (+44)" },
+];
+*/
+
+/*
+const countries = [
+  { value: "kr", label: "한국" },
+  { value: "us", label: "미국" },
+];
+
+*/
+
 const EmployerSignupForm = () => {
+  const [countries, setCountries] = useState<CountryCode[]>([]);
+  // 선택된 국가 코드
   const [selectedCountryCodes, setSelectedCountryCodes] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -55,10 +64,10 @@ const EmployerSignupForm = () => {
 
   // 유저 ID 중복 확인
   const {
-    mutate: checkUserId,
+    mutate: checkUserIdMutation,
     status: checkUserIdStatus,
-    isError: isCheckUserIdError,
-    error: checkUserIdError,
+    // isError: isCheckUserIdError,
+    // error: checkUserIdError,
     data: isValidId,
   } = useUserIdCheck();
 
@@ -112,12 +121,18 @@ const EmployerSignupForm = () => {
     return () => clearInterval(interval);
   }, [isSendVerificationSuccess]);
 
+  useEffect(() => {
+    getCountryCodes().then((codes) => {
+      setCountries(codes);
+    });
+  }, []);
+
   // 이메일 인증 코드 확인
   const handleSendVerificationCode = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
     // 이메일 인증 코드 확인 요청 보내기
     // 백엔드 API 호출이 성공적이면 타이머 시작
     // 발송 요청이 실패하면 에러 메시지 표시
-    e.preventDefault();
     const email = watch("email");
     console.log(`Email: ${email}`);
 
@@ -168,29 +183,20 @@ const EmployerSignupForm = () => {
     setTimer(300);
   };
 
-  const handleUserIdCheck = (e: React.MouseEvent) => {
+  const handleUserIdCheck = async (e: React.MouseEvent) => {
     e.preventDefault();
     const userId = watch("userId");
     if (!userId) {
       alert("Please enter your user ID.");
       return;
     }
-    checkUserId(userId);
+    checkUserIdMutation(userId);
+    console.log("isValidId", isValidId);
   };
 
   const handleChangeCountryCode = (value: string) => {
     setSelectedCountryCodes(value);
-    console.log(`Selected: ${value}`);
-  };
-
-  const handleChangeCountry = (value: string) => {
-    setSelectedCountryCodes(value);
-    console.log(`Selected: ${value}`);
-  };
-
-  const handleChangeLanguage = (value: string) => {
-    setSelectedCountryCodes(value);
-    console.log(`Selected: ${value}`);
+    console.log(`Selected country code: ${value}`);
   };
 
   const openModal = (e: React.MouseEvent<HTMLElement>) => {
@@ -212,21 +218,51 @@ const EmployerSignupForm = () => {
         {/* 아이디 */}
         <label htmlFor="User ID">User ID</label>
         <div className="signup__form__id-group group">
-          <Controller
-            name="userId"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <Input type="text" placeholder="Create a user ID." {...field} />
-            )}
-          />
+          <div className="id-input-container">
+            <Controller
+              name="userId"
+              control={control}
+              rules={{
+                required: "User ID is required.",
+                minLength: {
+                  value: 3,
+                  message: "User ID must be at least 4 characters long.",
+                },
+                pattern: {
+                  value: /^[a-zA-Z0-9]+$/,
+                  message: "User ID must contain only alphanumeric characters.",
+                },
+              }}
+              render={({ field }) => (
+                <>
+                  <Input
+                    type="text"
+                    placeholder="Create a user ID."
+                    {...field}
+                  />
+                  {/* 성공 메시지 */}
+                  {isValidId?.isValid && (
+                    <span className="success-message">
+                      {isValidId.message || "This ID is available."}
+                    </span>
+                  )}
+                  {/* 오류 메시지 */}
+                  {!isValidId?.isValid && (
+                    <div className="errorMessage">
+                      <ErrorMessage message={isValidId?.message} />
+                    </div>
+                  )}
+                </>
+              )}
+            />
+          </div>
           <Button
             size={"sm"}
             variant={
               isCheckUserIdLoading
                 ? "primary"
                 : isValidId !== undefined
-                ? isValidId
+                ? isValidId?.isValid
                   ? "secondary" // 'secondary'는 유효한 ID
                   : "tertiary" // 'tertiary'는 유효하지 않은 ID
                 : "primary" // isLoading이나 isValidId가 undefined일 때 기본값
@@ -236,18 +272,12 @@ const EmployerSignupForm = () => {
           >
             {isCheckUserIdLoading ? "Checking..." : "Verify"}
           </Button>
-          <div
-            className={`signup__form__id-group__message ${
-              isValidId ? "" : "invalid"
-            }`}
-          >
-            {isCheckUserIdError && (
-              <p>Error checking ID: {checkUserIdError.message}</p>
-            )}
-            {isValidId !== undefined && (
-              <span>ID is {isValidId ? "valid" : "invalid"}</span>
-            )}
-          </div>
+          {/* API에서 오류가 발생한 경우 */}
+          {/* {isValidId === undefined && !isCheckUserIdLoading && (
+            <div className="error-message">
+              Unable to check ID. Please try again later.
+            </div>
+          )} */}
         </div>
         {/* 비밀번호 */}
         <label htmlFor="Password">Password</label>
@@ -429,7 +459,10 @@ const EmployerSignupForm = () => {
           <div className="select-input-container">
             <SelectComponent
               label=""
-              options={countryCodes}
+              options={countries.map((country) => ({
+                label: `${country.en_name} (${country.number})`,
+                value: country.number,
+              }))}
               selected={selectedCountryCodes}
               onChange={handleChangeCountryCode}
             />
@@ -469,17 +502,23 @@ const EmployerSignupForm = () => {
         <label htmlFor="Country">Country</label>
         <SelectComponent
           label=""
-          options={countries}
+          options={countries.map((country) => ({
+            label: country.en_name,
+            value: country.number,
+          }))}
           selected={selectedCountryCodes}
-          onChange={handleChangeCountry}
+          onChange={handleChangeCountryCode}
         />
         {/* 사용언어 */}
         <label htmlFor="Language">Language</label>
         <SelectComponent
           label=""
-          options={countries}
+          options={countries.map((country) => ({
+            label: country.en_name,
+            value: country.en_name,
+          }))}
           selected={selectedCountryCodes}
-          onChange={handleChangeLanguage}
+          onChange={handleChangeCountryCode}
         />
         {/* 약관 */}
         <label className="checkbox-label">

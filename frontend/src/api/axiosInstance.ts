@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setupMocks } from "./mockSetup";
 
 // axios 인스턴스 생성
 const axiosInstance = axios.create({
@@ -10,19 +11,11 @@ const axiosInstance = axios.create({
   },
 });
 
-// Apply mocks in development environment
-// if (import.meta.env.MODE === "development") {
-//   console.log("development Setting up mock adapter");
-//   setupMocks(axiosInstance);
-// }
+const useMock = import.meta.env.REACT_APP_USE_MOCK_API === "true";
+// 개발 환경이고, Mock 사용이 활성화되어 있다면 Mock 설정 적용
 
-// 사용자 ID 중복 확인 API 호출 함수
-export const checkUserId = async (userId: string): Promise<boolean> => {
-  console.log(`checkUserId User ID: ${userId}`);
-  const response = await axiosInstance.get(`/api/check-user-id`, {
-    params: { userId },
-  });
-  return response.data.isValid;
-};
+if (import.meta.env.MODE === "development" && useMock) {
+  setupMocks(axiosInstance);
+}
 
 export default axiosInstance;

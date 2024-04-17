@@ -1,11 +1,19 @@
 import { useMutation } from "@tanstack/react-query";
-import { checkUserId } from "../api/axiosInstance";
+import { checkUserId } from "../api/signupUserApi";
 
 function useUserIdCheck() {
-  const mutation = useMutation<boolean, Error, string>({
+  const mutation = useMutation<
+    { isValid: boolean; message?: string },
+    Error,
+    string
+  >({
     mutationFn: checkUserId,
-    onSuccess: (isValid) => {
-      console.log(`ID is ${isValid ? "valid" : "invalid"}`);
+    onSuccess: ({ isValid, message }) => {
+      console.log(
+        `ID 중복 검사 결과: ${
+          isValid ? "valid" : "invalid"
+        }, Message: ${message}`
+      );
     },
     onError: (error: Error) => {
       console.error("ID 중복 검사 중 에러 발생:", error.message);
