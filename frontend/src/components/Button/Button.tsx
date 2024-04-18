@@ -1,5 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import { ButtonHTMLAttributes } from 'react';
+
 
 // 버튼 크기에 대한 타입 정의
 type ButtonSize = "sm" | "md" | "lg";
@@ -13,8 +15,8 @@ type ButtonVariant =
   | "outlineSecondary"
   | "outlineTertiary";
 
-// Button 컴포넌트의 props 타입 정의
-interface ButtonProps {
+// ButtonProps 타입 정의에 HTML 버튼 요소 속성 포함
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
   size: ButtonSize;
   variant: ButtonVariant;
