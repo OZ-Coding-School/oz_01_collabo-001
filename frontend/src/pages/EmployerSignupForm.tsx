@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { getCountryCodes, signupUser } from "../api/signupUserApi";
+import { getCountryCodes } from "../api/signup/signupUserApi";
 import Button from "../components/Button/Button";
 import ErrorMessage from "../components/ErrorMessage";
 import Input from "../components/Input/Input";
 import Modal from "../components/Modal";
 import SelectComponent from "../components/Select/SelectComponent";
-import { useSendVerificationCode } from "../hooks/useSendVerificationCode";
-import useUserIdCheck from "../hooks/useUserIdCheck";
-import { useVerifyEmailCode } from "../hooks/useVerifyEmailCode";
-import { CountryCode, EmployerSignupFormInputs } from "../interface/types";
+import { useSendVerificationCode } from "../hooks/singup/useSendVerificationCode";
+import useUserIdCheck from "../hooks/singup/useUserIdCheck";
+import { useVerifyEmailCode } from "../hooks/singup/useVerifyEmailCode";
+import {
+  CountryCode,
+  EmployerSignupFormInputs,
+} from "../interface/signup/types";
 import "../style/FreelancerSignupForm.css";
 
 /*
@@ -223,10 +226,10 @@ const EmployerSignupForm = () => {
   const onSubmit: SubmitHandler<EmployerSignupFormInputs> = (data, e) => {
     e?.preventDefault();
     // const { firstName, lastName, company, userId, email, password, password2, country, mobile, language } = data;
-    const { verificationCode, agreeToTerms, countryCode, ...submitData } = data;
+    // const { verificationCode, agreeToTerms, countryCode, ...submitData } = data;
     console.log("onSubmit", data);
     // 회원가입 API 호출
-    signupUser(submitData);
+    // signupUser(submitData);
   };
 
   const closeModal = () => setIsModalOpen(false);

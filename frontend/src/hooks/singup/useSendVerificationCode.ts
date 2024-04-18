@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import axiosInstance from "../api/axiosInstance";
+import axiosInstance from "../../api/signup/axiosInstance";
 
 const sendEmailVerificationCode = async (email: string): Promise<string> => {
   const data = JSON.stringify({ email });

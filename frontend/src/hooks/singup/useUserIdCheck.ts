@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { checkUserId } from "../api/signupUserApi";
+import { checkUserId } from "../../api/signup/signupUserApi";
 
 function useUserIdCheck() {
   const mutation = useMutation<

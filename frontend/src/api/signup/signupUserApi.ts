@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CountryCode, UserSignupData } from "../interface/types";
+import { CountryCode, UserSignupData } from "../../interface/signup/types";
 import axiosInstance from "./axiosInstance";
 
 // 사용자 ID 중복 확인 API 호출 함수
