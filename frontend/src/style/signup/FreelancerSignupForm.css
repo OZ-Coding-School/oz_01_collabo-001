@@ -1,0 +1,241 @@
+label {
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+
+.signup__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.signup__form {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  margin: 24px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.signup__form select {
+  width: 100%;
+}
+
+.signup__form__name-group {
+  display: flex;
+  gap: 1px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* email */
+.signup__form__email-group {
+  display: flex;
+  gap: 1px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signup__form__email-group Input {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+/* mobile */
+.signup__form__phone-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 좌측 정렬을 위해 변경 */
+  gap: 8px; /* 요소 간 간격 */
+}
+
+.signup__form__phone-group SelectComponent {
+  flex-grow: 1;
+}
+
+.input-button-container {
+  display: flex;
+  align-items: center; /* 버튼과 인풋을 중앙 정렬 */
+  gap: 8px; /* 버튼과 인풋 사이의 간격 */
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  /* align-items: flex-start; 여기도 좌측 정렬을 위해 변경 */
+  width: 100%; /* 전체 너비를 부모와 동일하게 설정 */
+}
+
+.success-message {
+  color: green; /* 긍정적 메시지 색상 */
+  font-size: 0.8em;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.success-message::before {
+  content: "✔"; /* 체크 마크 아이콘 */
+  font-size: 1em;
+  margin-right: 5px;
+}
+
+.input-container .errorMessage {
+  width: 100%; /* 오류 메시지의 너비를 부모와 같게 설정 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  color: red; /* 오류 메시지 색상 */
+  margin-top: 4px; /* 입력 필드와 오류 메시지 사이의 여백 */
+  margin-bottom: 4px; /* 오류 메시지와 다음 요소 사이의 여백 추가 */
+}
+
+/* 선택 컴포넌트와 입력 필드가 같은 줄에 위치하기 위한 추가 스타일 */
+.select-input-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.select-component,
+.input-with-error-message {
+  flex: 1; /* flex-grow를 활용하여 공간을 균등하게 배분 */
+}
+
+.input-with-error-message {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px; /* 선택 컴포넌트와의 간격을 위해 추가 */
+}
+
+/* 국가 */
+
+/* 약관 */
+
+.checkbox-group {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.form-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px; /* Adjust the max width as needed */
+  margin: 0 auto;
+}
+
+.form-section-title {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.checkbox-group {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.checkbox-label div {
+  display: inline; /* 블록 요소 대신 인라인으로 처리 */
+}
+
+.checkbox-label a {
+  color: #0066cc; /* 링크 색상, 원하는 색상으로 조정 */
+  text-decoration: underline; /* 밑줄 */
+  cursor: pointer; /* 마우스 오버 시 포인터 모양으로 변경 */
+  margin: 0 4px; /* 링크 주변 간격 조정 */
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center; /* 세로 중심 정렬 */
+  gap: 0.5rem; /* 체크박스와 텍스트 사이의 간격 */
+}
+
+.agreement-text {
+  display: block; /* 또는 'flex'를 사용하여 자식 요소를 세로 중심 정렬 */
+  text-align: left;
+}
+
+.text-block a {
+  white-space: nowrap; /* 링크 텍스트 줄바꿈 방지 */
+  margin: 0 0.25rem; /* 링크 사이 간격 조정 */
+}
+
+.text-block {
+  display: block; /* 블록 레벨 요소로 만들어 줄바꿈 적용 */
+}
+
+.separator {
+  border: none;
+  height: 1px;
+  background-color: #ccc;
+  margin: 10px 0;
+}
+
+.arrow {
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* */
+
+/* name-group, email-group과 같은 그룹 요소에 대한 공통 스타일링 */
+.group {
+  display: flex;
+  gap: 8px; /* 필요한 경우 조정 */
+  align-items: center; /* 세로 정렬 */
+}
+
+/* 버튼을 포함하는 그룹에 'flex-grow' 속성 적용 */
+.group input,
+.group button {
+  flex-grow: 1;
+}
+
+/* Input과 Button이 함께 있는 경우 Button에 마진을 주어 분리 */
+.group button {
+  margin-left: 8px; /* 필요한 경우 조정 */
+}
+
+/* Id 중복확인에 대한 메세지 스타일링 */
+.signup__form__id-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.signup__form__id-group__input {
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.signup__form__id-group__message {
+  width: 100%;
+  margin-top: 0;
+  text-align: left;
+  color: #4caf50;
+  font-size: 0.9rem;
+}
+
+.signup__form__id-group__message.invalid {
+  color: #f44336;
+}
+
+/* 오류 메시지가 없을 때도 공간을 차지하는 투명한 텍스트 */
+.noErrorMessage::after {
+  content: "";
+  display: block;
+  min-height: 20px;
+}
