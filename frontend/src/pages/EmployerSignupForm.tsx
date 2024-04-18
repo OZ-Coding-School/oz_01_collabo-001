@@ -42,13 +42,7 @@ const EmployerSignupForm = () => {
     mode: "onChange", // or 'onBlur'
   });
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = form;
+  const { register, control, handleSubmit, watch } = form;
 
   // 유저 ID 중복 확인
   const {
