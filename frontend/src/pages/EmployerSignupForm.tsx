@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { getCountryCodes } from "../api/signupUserApi";
+import { getCountryCodes, signupUser } from "../api/signupUserApi";
 import Button from "../components/Button/Button";
 import ErrorMessage from "../components/ErrorMessage";
 import Input from "../components/Input/Input";
@@ -9,23 +9,8 @@ import SelectComponent from "../components/Select/SelectComponent";
 import { useSendVerificationCode } from "../hooks/useSendVerificationCode";
 import useUserIdCheck from "../hooks/useUserIdCheck";
 import { useVerifyEmailCode } from "../hooks/useVerifyEmailCode";
-import { CountryCode } from "../interface/types";
+import { CountryCode, EmployerSignupFormInputs } from "../interface/types";
 import "../style/FreelancerSignupForm.css";
-
-interface EmployerSignupFormInputs {
-  userId: string;
-  password: string;
-  confirmPassword: string;
-  firstName: string;
-  lastName: string;
-  company: string;
-  email: string;
-  mobile: string;
-  country: string;
-  language: string;
-  agreeToTerms: boolean;
-  verificationCode?: string;
-}
 
 /*
 const countryCodes = [
@@ -48,19 +33,19 @@ const countries = [
 const EmployerSignupForm = () => {
   const [countries, setCountries] = useState<CountryCode[]>([]);
   // 선택된 국가 코드
-  const [selectedCountryCodes, setSelectedCountryCodes] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // const { control, handleSubmit, watch } = useForm<EmployerSignupFormInputs>();
+  const form = useForm<EmployerSignupFormInputs>({
+    mode: "onChange", // or 'onBlur'
+  });
+
   const {
     register,
     control,
     handleSubmit,
     watch,
-    // formState: { errors },
-  } = useForm<EmployerSignupFormInputs>({
-    mode: "onChange", // or 'onBlur'
-  });
+    formState: { errors },
+  } = form;
 
   // 유저 ID 중복 확인
   const {
@@ -74,6 +59,8 @@ const EmployerSignupForm = () => {
 
   // userId 필드의 값을 감시
   const watchedUserId = watch("userId");
+  const watchedValues = watch(); // 모든 필드의 값을 관찰
+  console.log(watchedValues);
 
   // const isLoading = status === "pending";
   const isCheckUserIdLoading = checkUserIdStatus === "pending";
@@ -202,19 +189,44 @@ const EmployerSignupForm = () => {
     console.log("isValidId", isValidId);
   };
 
-  const handleChangeCountryCode = (value: string) => {
-    setSelectedCountryCodes(value);
-    console.log(`Selected country code: ${value}`);
-  };
-
   const openModal = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     setIsModalOpen(true);
   };
 
   // 폼 제출
+  /*
   const onSubmit: SubmitHandler<EmployerSignupFormInputs> = (data) => {
+    console.log("onSubmit");
     console.log(data);
+  };
+
+
+    userId: string;
+  password: string;
+  password2: string;
+  firstName: string;
+  lastName: string;
+  company: string;
+  email: string;
+  countryCode: string;
+  // mobile: string;
+  // country: string;
+  mobile: number;
+  country: string;
+  language: string;
+  agreeToTerms: boolean;
+  verificationCode?: string;
+
+  */
+
+  const onSubmit: SubmitHandler<EmployerSignupFormInputs> = (data, e) => {
+    e?.preventDefault();
+    // const { firstName, lastName, company, userId, email, password, password2, country, mobile, language } = data;
+    const { verificationCode, agreeToTerms, countryCode, ...submitData } = data;
+    console.log("onSubmit", data);
+    // 회원가입 API 호출
+    signupUser(submitData);
   };
 
   const closeModal = () => setIsModalOpen(false);
@@ -332,7 +344,7 @@ const EmployerSignupForm = () => {
 
         {/* 비밀번호 확인 */}
         <Controller
-          name="confirmPassword"
+          name="password2"
           control={control}
           rules={{
             required: true,
@@ -355,29 +367,44 @@ const EmployerSignupForm = () => {
         {/* 이름 */}
         <label htmlFor="Full Name">Full Name</label>
         <div className="signup__form__name-group group">
-          <Input
-            type="text"
-            placeholder="Enter your first name."
-            {...register("firstName", {
-              required: true,
-            })}
+          <Controller
+            name="firstName"
+            control={control}
+            rules={{ required: "first name is required." }}
+            render={({ field }) => (
+              <Input
+                type="text"
+                placeholder="Enter your first name."
+                {...field}
+              />
+            )}
           />
-          <Input
-            type="text"
-            placeholder="Enter your last name."
-            {...register("lastName", {
-              required: true,
-            })}
+          <Controller
+            name="lastName"
+            control={control}
+            rules={{ required: "last name is required." }}
+            render={({ field }) => (
+              <Input
+                type="text"
+                placeholder="Enter your last name."
+                {...field}
+              />
+            )}
           />
         </div>
         {/* 회사 */}
         <label htmlFor="Company">Company</label>
-        <Input
-          type="text"
-          placeholder="Enter your company name."
-          {...register("company", {
-            required: true,
-          })}
+        <Controller
+          name="company"
+          control={control}
+          rules={{ required: "Company name is required." }}
+          render={({ field }) => (
+            <Input
+              type="text"
+              placeholder="Enter your company name."
+              {...field}
+            />
+          )}
         />
         {/* 이메일 */}
         <label htmlFor="Email">Email</label>
@@ -476,14 +503,20 @@ const EmployerSignupForm = () => {
         {/* <div className="signup__form__phone-group group"> */}
         <div className="signup__form__input-group">
           <div className="select-input-container">
-            <SelectComponent
-              label=""
-              options={countries.map((country) => ({
-                label: `${country.en_name} (${country.number})`,
-                value: country.number,
-              }))}
-              selected={selectedCountryCodes}
-              onChange={handleChangeCountryCode}
+            <Controller
+              control={control}
+              name="countryCode"
+              render={({ field }) => (
+                <SelectComponent
+                  label=""
+                  options={countries.map((country) => ({
+                    label: `${country.en_name} (${country.number})`,
+                    value: `${country.number.replace(/[^0-9]/g, "")}`, // 지금은 DB로부터 id를 받아오지 않으므로 index를 사용
+                  }))}
+                  selected={field.value}
+                  onChange={field.onChange}
+                />
+              )}
             />
             <div className="input-with-error-message">
               <Controller
@@ -519,29 +552,46 @@ const EmployerSignupForm = () => {
         </div>
         {/* 국가 */}
         <label htmlFor="Country">Country</label>
-        <SelectComponent
-          label=""
-          options={countries.map((country) => ({
-            label: country.en_name,
-            value: country.number,
-          }))}
-          selected={selectedCountryCodes}
-          onChange={handleChangeCountryCode}
+        <Controller
+          control={control}
+          name="country"
+          render={({ field }) => (
+            <SelectComponent
+              label=""
+              options={countries.map((country, index) => ({
+                label: country.en_name,
+                value: `${index + 1}`, // 지금은 DB로부터 id를 받아오지 않으므로 index를 사용
+              }))}
+              selected={field.value}
+              {...field}
+            />
+          )}
         />
         {/* 사용언어 */}
         <label htmlFor="Language">Language</label>
-        <SelectComponent
-          label=""
-          options={countries.map((country) => ({
-            label: country.en_name,
-            value: country.en_name,
-          }))}
-          selected={selectedCountryCodes}
-          onChange={handleChangeCountryCode}
+        <Controller
+          control={control}
+          name="language"
+          render={({ field }) => (
+            <SelectComponent
+              label=""
+              options={countries.map((country) => ({
+                label: country.en_name,
+                value: country.en_name,
+              }))}
+              selected={field.value}
+              {...field}
+            />
+          )}
         />
         {/* 약관 */}
         <label className="checkbox-label">
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            {...register("agreeToTerms", {
+              required: "You must agree to the terms to continue",
+            })}
+          />
           <span className="agreement-text">
             I agree to the 플라잉 피그
             <span className="text-block">
@@ -551,7 +601,7 @@ const EmployerSignupForm = () => {
           </span>
         </label>
 
-        <Button size={"lg"} variant={"primary"}>
+        <Button size={"lg"} variant={"primary"} type="submit">
           Join
         </Button>
         <span className="signup__form__login">
