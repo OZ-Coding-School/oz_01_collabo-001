@@ -24,14 +24,18 @@ const KanbanBoardTicket = React.memo(
             {...provided.dragHandleProps}
             isDragging={snapshot.isDragging}
           >
-            <TicketNumber>{ticketNumber}</TicketNumber>
-            <TicketDescription>{description}</TicketDescription>
+            <TicketRow>
+              <TicketId>{ticketNumber}</TicketId>
+              <Separator />
+              <TicketDescription>{description}</TicketDescription>
+            </TicketRow>
           </TicketContainer>
         )}
       </Draggable>
     );
   }
 );
+
 const TicketContainer = styled.div<{ isDragging: boolean }>`
   background-color: ${(props) => (props.isDragging ? "#f0f8ff" : "#ffffff")};
   border: 1px solid #cbd5e0;
@@ -46,15 +50,38 @@ const TicketContainer = styled.div<{ isDragging: boolean }>`
   }
 `;
 
-const TicketNumber = styled.strong`
-  display: block;
-  color: #2b6cb0;
-  margin-bottom: 0.5rem;
+const TicketRow = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const TicketId = styled.div`
+  // background-color: #dfe6e9;
+  // color: #2d3436;
+  // border-radius: 4px;
+  // padding: 4px 8px;
+  // font-size: 0.9rem;
+  // font-weight: 600;
+  background-color: #dfe6e9;
+  color: #2d3436;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+`;
+
+const Separator = styled.hr`
+  width: 1px;
+  height: 16px;
+  background-color: #b2bec3;
+  margin: 0 12px;
 `;
 
 const TicketDescription = styled.p`
   margin: 0;
-  color: #4a5568;
+  color: #2d3436;
+  font-size: 0.9rem;
 `;
 
 export default KanbanBoardTicket;

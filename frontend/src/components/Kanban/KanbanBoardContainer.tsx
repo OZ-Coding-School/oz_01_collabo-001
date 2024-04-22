@@ -135,29 +135,10 @@ const KanbanBoardContainer = () => {
     }
 
     const { source, destination } = result;
-
-    /*
-    const sourceId = result.source.droppableId; // 현재 선택된 아이템의 섹션 droppableId
-    const destinationId = result.destination.droppableId; // 드래그 후 이동된 아이템의 섹션 droppableId
-    console.log("sourceId:", sourceId); // 드래그 시작한 droppableId 출력
-    console.log(
-      "items:",
-      items.map((item) => item.id)
-    ); // 현재 items 배열의 id들 출력
-    
-    */
     // 같은 droppable 내에서의 이동 // result.source 드래그 시작 위치, result.destination 드래그 끝 위치
     if (source.droppableId === destination.droppableId) {
       console.log("같은 droppable 내에서의 이동");
       const column = items.find((col) => col.id === source.droppableId);
-
-      /*
-      const updatedStage = items.find(
-        (stage) => stage.id === result.source.droppableId
-      );
-      */
-
-      console.log("column", column);
 
       if (column) {
         const newTickets = reorder(
@@ -165,7 +146,6 @@ const KanbanBoardContainer = () => {
           source.index,
           destination.index
         );
-        console.log("newTickets", newTickets);
 
         // items 배열 전체 업데이트
         const updatedItems = items.map((item) => {
@@ -174,9 +154,7 @@ const KanbanBoardContainer = () => {
             : { ...item }; // 변경이 없는 아이템은 새 객체로 복사
         });
 
-        console.log("updatedItems", updatedItems);
         setItems([...updatedItems]);
-        console.log("items", items);
       }
     } else {
       // 다른 droppable 간의 이동 // droppableId: '1', '2', '3', '4' : 각 index 는 0번부터 시작
@@ -205,12 +183,12 @@ const KanbanBoardContainer = () => {
       // 3. sourceStage 에서는 해당 아이템을 제거해주어야 한다.
 
       // const draggableId = result.draggableId; // 현재 선택된 아이템
-      /*
+
       const sourceStageIndex = items.findIndex(
-        (stage) => stage.id === sourceId
+        (stage) => stage.id === source.droppableId
       );
       const destinationStageIndex = items.findIndex(
-        (stage) => stage.id === destinationId
+        (stage) => stage.id === destination.droppableId
       );
       const sourceStage = items[sourceStageIndex];
       const destinationStage = items[destinationStageIndex];
@@ -227,26 +205,15 @@ const KanbanBoardContainer = () => {
 
       const updatedItems = items.map((stage, index) => {
         if (index === sourceStageIndex) {
-          return { ...stage, tasks: newSourceTasks };
+          return { ...stage, tickets: newSourceTasks };
         } else if (index === destinationStageIndex) {
-          return { ...stage, tasks: newDestinationTasks };
+          return { ...stage, tickets: newDestinationTasks };
         } else {
           return stage;
         }
       });
 
       setItems(updatedItems);
-    }
-    */
-
-      /*
-    const updatedItems = reorder(
-      items,
-      result.source.index,
-      result.destination.index
-    );
-    setItems(updatedItems);
-    */
     }
   };
 
