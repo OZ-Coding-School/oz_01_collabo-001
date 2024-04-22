@@ -3,101 +3,58 @@ import KanbanBoardContainer from "../../components/Kanban/KanbanBoardContainer";
 
 const KanbanPage = () => {
   return (
-    <Board>
-      <PageContainer>
-        <NavigationBar>
-          <ul className="nav__list">
-            <li className="nav__item">
-              <a href="#">My Account</a>
-            </li>
-            <li className="nav__item">
-              <a href="#">Hire Talent</a>
-            </li>
-            <li className="nav__item">
-              <a href="#">Find Work</a>
-            </li>
-          </ul>
-        </NavigationBar>
-        {/* main */}
-        <MainContent>
-          <ProjectSection>
-            <div className="project" style={{ width: "100%" }}>
-              <select name="project" id="project">
-                <option value="project1">Project 1</option>
-                <option value="project2">Project 2</option>
-                <option value="project3">Project 3</option>
-              </select>
-              <button className="btn">Add Ticket</button>
-            </div>
-            <div className="sprint" style={{ width: "100%" }}>
-              <select name="sprint" id="sprint">
-                <option value="sprint123">
-                  Sprint 123(20xx-xx-xx~20xx-xx-xx)
-                </option>
-                <option value="sprint234">
-                  Sprint 234(20xx-xx-xx~20xx-xx-xx)
-                </option>
-                <option value="sprint345">
-                  Sprint 345(20xx-xx-xx~20xx-xx-xx)
-                </option>
-              </select>
-              <button className="btn">Backlog tickets</button>
-              <button className="btn">Closed tickets</button>
-            </div>
-          </ProjectSection>
-          <BoardSection>
-            {/* 
-            <Column>
-              <Header>
-                <Title>1. To Do</Title>
-              </Header>
-              <div className="ticket">Ticket 1</div>
-            </Column>
-            <Column>
-              <Header>
-                <Title>2. In progress</Title>
-              </Header>
-              <div className="ticket">Ticket 1</div>
-            </Column>
-            <Column>
-              <Header>
-                <Title>3. In QA</Title>
-              </Header>
-              <div className="ticket">Ticket 1</div>
-            </Column>
-            <Column>
-              <Header>
-                <Title>4. Done</Title>
-              </Header>
-              <div className="ticket">Ticket 1</div>
-            </Column>
-          */}
-            {/* <Kanban /> */}
-            <KanbanBoardContainer />
-          </BoardSection>
-        </MainContent>
-      </PageContainer>
-    </Board>
+    <PageContainer>
+      <MainContent>
+        <ProjectSection>
+          <div className="project" style={{ width: "100%" }}>
+            <select name="project" id="project">
+              <option value="project1">Project 1</option>
+              <option value="project2">Project 2</option>
+              <option value="project3">Project 3</option>
+            </select>
+            <button className="btn">Add Ticket</button>
+          </div>
+          <div className="sprint" style={{ width: "100%" }}>
+            <select name="sprint" id="sprint">
+              <option value="sprint123">
+                Sprint 123(20xx-xx-xx~20xx-xx-xx)
+              </option>
+              <option value="sprint234">
+                Sprint 234(20xx-xx-xx~20xx-xx-xx)
+              </option>
+              <option value="sprint345">
+                Sprint 345(20xx-xx-xx~20xx-xx-xx)
+              </option>
+            </select>
+            <button className="btn">Backlog tickets</button>
+            <button className="btn">Closed tickets</button>
+          </div>
+        </ProjectSection>
+        <BoardSection>
+          <KanbanBoardContainer />
+        </BoardSection>
+      </MainContent>
+    </PageContainer>
   );
 };
 
-const Board = styled.div`
-  display: flex;
-  justify-content: space-around;
-  padding: 0;
-  background: #eaeaea;
-`;
-
 const PageContainer = styled.div`
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
+  // padding: 2rem;
+  // background-color: #f5f5f5;
+  // min-height: 100vh;
+  // width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
-  background-color: #f5f5f5;
+  // background-color: #f5f5f5;
   min-height: 100vh;
   width: 100%;
 `;
 
+/*
 const NavigationBar = styled.nav`
   width: 100%;
   padding: 1rem 0;
@@ -107,24 +64,26 @@ const NavigationBar = styled.nav`
   ul {
     list-style: none;
     display: flex;
-    justify-content: space-between;
-    padding: 0;
+    justify-content: flex-end;
+    padding: 0 2rem;
     margin: 0;
   }
 
   li {
     display: inline;
+    margin-left: 1rem;
   }
 
   a {
     text-decoration: none;
     color: #333;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
     &:hover {
       color: #007bff;
     }
   }
 `;
+*/
 
 const MainContent = styled.main`
   flex-grow: 1;
@@ -175,28 +134,5 @@ const BoardSection = styled.section`
   justify-content: space-between;
   /* Other styles */
 `;
-
-/*
-const Column = styled.div`
-  flex-grow: 1;
-  width: 25%%;
-  margin: 0 0.5rem;
-  background: #fff;
-  border-radius: 4px;
-  padding: 1rem;
-  min-height: 300px;
-`;
-
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-`;
-
-const Title = styled.h2`
-  font-size: 1.25rem;
-`;
-
-*/
 
 export default KanbanPage;

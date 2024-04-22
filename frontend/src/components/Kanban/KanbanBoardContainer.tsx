@@ -230,7 +230,8 @@ const Board = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
+  // padding: 2rem;
+  padding: 2rem 0;
   background-color: #ffffff;
   min-height: 100vh;
   width: 100%;
