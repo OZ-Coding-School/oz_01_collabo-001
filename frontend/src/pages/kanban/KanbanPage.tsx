@@ -176,7 +176,7 @@ const BoardSection = styled.section`
 
 const Column = styled.div`
   flex-grow: 1;
-  width: 25%%;
+  width: 25%;
   margin: 0 0.5rem;
   background: #fff;
   border-radius: 4px;
