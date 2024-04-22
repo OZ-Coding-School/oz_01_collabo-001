@@ -1,29 +1,47 @@
 // KanbanBoardColumn.tsx
+import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { Ticket } from "../../interface/kanban/types";
+import { Tickets } from "../../interface/kanban/types";
 import KanbanBoardTicket from "./KanbanBoardTicket";
 
 interface KanbanBoardColumnProps {
+  id: string;
   title: string;
-  tickets: Ticket[];
+  tickets: Tickets;
 }
 
 const KanbanBoardColumn: React.FC<KanbanBoardColumnProps> = ({
+  id,
   title,
   tickets,
 }) => {
   return (
     <KanbanColumn>
       <div className="column-header">{title}</div>
-      <div className="column">
-        {tickets.map((ticket) => (
-          <KanbanBoardTicket
-            key={ticket.id}
-            ticketNumber={ticket.id}
-            description={ticket.description}
-          />
-        ))}
-      </div>
+      <Droppable droppableId={id}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className="column"
+            style={{
+              backgroundColor: snapshot.isDraggingOver
+                ? "lightblue"
+                : "inherit",
+            }}
+          >
+            {tickets.map((ticket, index) => (
+              <KanbanBoardTicket
+                key={`${ticket.id}-${index}`} // 이전: key={ticket.id}
+                index={index}
+                ticketNumber={ticket.id}
+                description={ticket.description}
+              />
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </KanbanColumn>
   );
 };
