@@ -15,20 +15,23 @@ import Input from "../components/Input/Input";
 // https://jsonplaceholder.typicode.com/posts
 
 const HomeLogin = () => {
-    const [id,setId]=useState('');
-    const [pw,setPw]=useState('');
+    const [user_id,setUser_id]=useState('');
+    const [password,setPassword]=useState('');
       
     //로그인이 끝났으면 다르 페이지로 넘어가기 위해 라우터 만들어주기
     const router = useNavigate();
 
-    const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {setId(e.target.value);};
-    const onChangePw = (e: React.ChangeEvent<HTMLInputElement>) => {setPw(e.target.value);};
+    const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {setUser_id(e.target.value);};
+    const onChangePw = (e: React.ChangeEvent<HTMLInputElement>) => {setPassword(e.target.value);};
 
-    const onClick=async ()=>{
+    const onClick=async (e: React.MouseEvent<HTMLElement>)=>{
+      e.preventDefault();
+      
         //로그인 api
-        const result = await login(id,pw);
+        
+        const result = await login(user_id,password);
         console.log(result);
-        const {accessToken, refreshToken}=result;
+        const { 'access-token': accessToken, 'refresh-token': refreshToken }=result;
         localStorage.setItem('access',accessToken);
         localStorage.setItem('refresh',refreshToken);
         router('/complete-registration'); // 로그인 후 CompleteRegistration 페이지로 이동
@@ -37,29 +40,28 @@ const HomeLogin = () => {
   return (
     
     <Wrapper>
-      <Title>Login</Title>
-      <Form>
+    <Title>Login</Title>
+    <Form>
         <InputWrapper>
-          <Input placeholder="ID" value={id} onChange={onChangeId}/>
+            <Input placeholder="ID" value={user_id} onChange={onChangeId}/>
         </InputWrapper>
         <InputWrapper>
-          <Input type="password" placeholder="Password" value={pw} onChange={onChangePw}/>
+            <Input type="password" placeholder="Password" value={password} onChange={onChangePw}/>
         </InputWrapper>
         <ButtonWrapper>
-        <Button variant="primary" size="md" style={{ width: '100%', height: 'auto' }} onClick={onClick}>Login</Button>
+            <Button variant="primary" size="md" style={{ width: '100%', height: 'auto' }} onClick={onClick}>Login</Button>
         </ButtonWrapper>
         <CustomLink to="/signup">SignIn</CustomLink>
-      </Form>
-       
-        <Title2>SNS Login</Title2>
-        <SnsButton>
-                <Googlebtn><img src={GoogleImage} alt="Google" /></Googlebtn>
-                <Applebtn><img src={AppleImage} alt="Apple" /></Applebtn>
-        </SnsButton>
-    </Wrapper>
-  )
-}
-
+    </Form>
+    
+    <Title2>SNS Login</Title2>
+    <SnsButton>
+        <Googlebtn><img src={GoogleImage} alt="Google" /></Googlebtn> 
+        <Applebtn><img src={AppleImage} alt="Apple" /></Applebtn>
+    </SnsButton>
+</Wrapper>
+);
+};
 const Wrapper = styled.section`
 display: flex;
 flex-direction: column;
