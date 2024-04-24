@@ -2,81 +2,40 @@ import styled from "styled-components";
 import KanbanBoardContainer from "../../components/Kanban/KanbanBoardContainer";
 
 const KanbanPage = () => {
+
   return (
-    <Board>
-      <PageContainer>
-        <NavigationBar>
-          <ul className="nav__list">
-            <li className="nav__item">
-              <a href="#">My Account</a>
-            </li>
-            <li className="nav__item">
-              <a href="#">Hire Talent</a>
-            </li>
-            <li className="nav__item">
-              <a href="#">Find Work</a>
-            </li>
-          </ul>
-        </NavigationBar>
-        {/* main */}
-        <MainContent>
-          <ProjectSection>
-            <div className="project" style={{ width: "100%" }}>
-              <select name="project" id="project">
-                <option value="project1">Project 1</option>
-                <option value="project2">Project 2</option>
-                <option value="project3">Project 3</option>
-              </select>
-              <button className="btn">Add Ticket</button>
-            </div>
-            <div className="sprint" style={{ width: "100%" }}>
-              <select name="sprint" id="sprint">
-                <option value="sprint123">
-                  Sprint 123(20xx-xx-xx~20xx-xx-xx)
-                </option>
-                <option value="sprint234">
-                  Sprint 234(20xx-xx-xx~20xx-xx-xx)
-                </option>
-                <option value="sprint345">
-                  Sprint 345(20xx-xx-xx~20xx-xx-xx)
-                </option>
-              </select>
-              <button className="btn">Backlog tickets</button>
-              <button className="btn">Closed tickets</button>
-            </div>
-          </ProjectSection>
-          <BoardSection>
-            <Column>
-              <Header>
-                <Title>1. To Do</Title>
-              </Header>
-              <div className="ticket">Ticket 1</div>
-            </Column>
-            {/*  */}
-            <Column>
-              <Header>
-                <Title>2. In progress</Title>
-              </Header>
-              <div className="ticket">Ticket 1</div>
-            </Column>
-            {/*  */}
-            <Column>
-              <Header>
-                <Title>3. In QA</Title>
-              </Header>
-              <div className="ticket">Ticket 1</div>
-            </Column>
-            {/*  */}
-            <Column>
-              <Header>
-                <Title>4. Done</Title>
-              </Header>
-              <div className="ticket">Ticket 1</div>
-            </Column>
-          </BoardSection>
-        </MainContent>
-      </PageContainer>
-    </Board>
+    <PageContainer>
+      <MainContent>
+        <ProjectSection>
+          <div className="project" style={{ width: "100%" }}>
+            <select name="project" id="project">
+              <option value="project1">Project 1</option>
+              <option value="project2">Project 2</option>
+              <option value="project3">Project 3</option>
+            </select>
+            <button className="btn">Add Ticket</button>
+          </div>
+          <div className="sprint" style={{ width: "100%" }}>
+            <select name="sprint" id="sprint">
+              <option value="sprint123">
+                Sprint 123(20xx-xx-xx~20xx-xx-xx)
+              </option>
+              <option value="sprint234">
+                Sprint 234(20xx-xx-xx~20xx-xx-xx)
+              </option>
+              <option value="sprint345">
+                Sprint 345(20xx-xx-xx~20xx-xx-xx)
+              </option>
+            </select>
+            <button className="btn">Backlog tickets</button>
+            <button className="btn">Closed tickets</button>
+          </div>
+        </ProjectSection>
+        <BoardSection>
+          <KanbanBoardContainer />
+        </BoardSection>
+      </MainContent>
+    </PageContainer>
   );
 };
 
@@ -87,6 +46,7 @@ const PageContainer = styled.div`
   min-height: 100vh;
   width: 100%;
 `;
+
 
 const MainContent = styled.main`
   flex-grow: 1;
