@@ -2,65 +2,8 @@
 import { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { Columns, Tickets } from "../../interface/kanban/types";
+import { Column, Columns, Tickets } from "../../interface/kanban/types";
 import KanbanBoard from "./KanbanBoard";
-
-const myColumns: Columns = [
-  {
-    id: "column-1",
-    title: "To Do",
-    tickets: [
-      {
-        id: "ticket-1",
-        title: "Ticket 1",
-        description: "Description for Ticket 1",
-      },
-      {
-        id: "ticket-2",
-        title: "Ticket 2",
-        description: "Description for Ticket 2",
-      },
-    ],
-  },
-  {
-    id: "column-2",
-    title: "in-progress",
-    tickets: [
-      {
-        id: "ticket-3",
-        title: "Ticket 3",
-        description: "Description for Ticket 1",
-      },
-    ],
-  },
-  {
-    id: "column-3",
-    title: "QA",
-    tickets: [
-      {
-        id: "ticket-4",
-        title: "Ticket 4",
-        description: "Description for Ticket 1",
-      },
-      {
-        id: "ticket-5",
-        title: "Ticket 5",
-        description: "Description for Ticket 1",
-      },
-    ],
-  },
-  {
-    id: "column-4",
-    title: "done",
-    tickets: [
-      {
-        id: "ticket-6",
-        title: "Ticket 6",
-        description: "Description for Ticket 1",
-      },
-    ],
-  },
-];
 
 // supporting types(지원 타입)
 type DropResult = {
@@ -116,17 +59,32 @@ const reorder = (
   return result;
 };
 
-const deepCopyColumns = myColumns.map((col) => ({
-  ...col,
-  tickets: [...col.tickets.map((ticket) => ({ ...ticket }))],
-}));
+const KanbanBoardContainer: React.FC<{ initialTickets: Tickets }> = ({
+  initialTickets,
+}) => {
+  const initialColumns: Columns = {
+    todo: initialTickets.filter((ticket) => ticket.condition === "todo"),
+    inProgress: initialTickets.filter(
+      (ticket) => ticket.condition === "in_progress"
+    ),
+    qa: initialTickets.filter((ticket) => ticket.condition === "qa"),
+    done: initialTickets.filter((ticket) => ticket.condition === "done"),
+  };
 
-const KanbanBoardContainer = () => {
-  const [items, setItems] = useState<Columns>(deepCopyColumns);
+  const [columns, setColumns] = useState<Columns>(initialColumns);
+
+  // Columns 객체를 Column[] 배열로 변환
+  const columnsArray: Column[] = Object.entries(columns).map(
+    ([status, tickets]) => ({
+      id: status,
+      title: status.charAt(0).toUpperCase() + status.slice(1).replace("_", " "),
+      tickets: tickets,
+    })
+  );
 
   useEffect(() => {
-    console.log("Items updated:", items);
-  }, [items]);
+    console.log("Columns updated:", columns);
+  }, [columns]);
 
   const onDragEnd = (result: DropResult) => {
     // 드롭 대상이 없는 경우
@@ -135,26 +93,31 @@ const KanbanBoardContainer = () => {
     }
 
     const { source, destination } = result;
+
     // 같은 droppable 내에서의 이동 // result.source 드래그 시작 위치, result.destination 드래그 끝 위치
     if (source.droppableId === destination.droppableId) {
       console.log("같은 droppable 내에서의 이동");
-      const column = items.find((col) => col.id === source.droppableId);
 
-      if (column) {
-        const newTickets = reorder(
-          column.tickets,
-          source.index,
-          destination.index
-        );
+      const tickets = columns[source.droppableId as keyof Columns];
+
+      if (tickets) {
+        const newTickets = reorder(tickets, source.index, destination.index);
 
         // items 배열 전체 업데이트
-        const updatedItems = items.map((item) => {
+        /*
+        const updatedItems = tickets.map((item: Column) => {
           return item.id === column.id
             ? { ...item, tickets: newTickets } // 새로운 티켓 배열로 업데이트
             : { ...item }; // 변경이 없는 아이템은 새 객체로 복사
         });
+        */
+        // columns 상태 업데이트
+        const updatedColumns = {
+          ...columns,
+          [source.droppableId]: newTickets,
+        };
 
-        setItems([...updatedItems]);
+        setColumns(updatedColumns);
       }
     } else {
       // 다른 droppable 간의 이동 // droppableId: '1', '2', '3', '4' : 각 index 는 0번부터 시작
@@ -163,64 +126,30 @@ const KanbanBoardContainer = () => {
       // 2. destinationStage 와, 이동된 위치를 찾아서 해당 위치에 넣어주어야 한다.
       // 3. sourceStage 에서는 해당 아이템을 제거해주어야 한다.
 
-      /*
-      console.log("target", result.draggableId); // 현재 선택된 아이템
-      console.log("source", result.source.droppableId); // 이동전 stage
-      console.log("source index", result.source.index); // 이동전 index
-      console.log("destination", result.destination?.droppableId); // 이동후 stage
-      console.log("destination index", result.destination?.index); // 이동후 index
-      */
-
-      /*
-      const sourceStage = items.find((stage) => stage.id === sourceId);
-      const destinationStage = items.find(
-        (stage) => stage.id === destinationId
-      );
-      */
-
-      // 1. 드래그 된 아이템이 뭔지를 알아야한다.
-      // 2. destinationStage 와, 이동된 위치를 찾아서 해당 위치에 넣어주어야 한다
-      // 3. sourceStage 에서는 해당 아이템을 제거해주어야 한다.
-
       // const draggableId = result.draggableId; // 현재 선택된 아이템
+      const sourceTickets = columns[source.droppableId as keyof Columns];
+      const destinationTickets =
+        columns[destination.droppableId as keyof Columns];
 
-      const sourceStageIndex = items.findIndex(
-        (stage) => stage.id === source.droppableId
-      );
-      const destinationStageIndex = items.findIndex(
-        (stage) => stage.id === destination.droppableId
-      );
-      const sourceStage = items[sourceStageIndex];
-      const destinationStage = items[destinationStageIndex];
+      if (sourceTickets && destinationTickets) {
+        const [removed] = sourceTickets.splice(source.index, 1);
+        destinationTickets.splice(destination.index, 0, removed);
 
-      const newSourceTasks = Array.from(sourceStage.tickets);
-      const [removedTask] = newSourceTasks.splice(result.source.index, 1);
+        const updatedColumns = {
+          ...columns,
+          [source.droppableId]: sourceTickets,
+          [destination.droppableId]: destinationTickets,
+        };
 
-      const newDestinationTasks = Array.from(destinationStage.tickets);
-      newDestinationTasks.splice(result.destination.index, 0, removedTask);
-
-      // 새로운 배열을 생성해서 상태를 업데이트 해야된다.
-      // 이동 전의 stage 는 newSourceTasks 로 업데이트
-      // 이동 후의 stage 는 newDestinationTasks 로 업데이트
-
-      const updatedItems = items.map((stage, index) => {
-        if (index === sourceStageIndex) {
-          return { ...stage, tickets: newSourceTasks };
-        } else if (index === destinationStageIndex) {
-          return { ...stage, tickets: newDestinationTasks };
-        } else {
-          return stage;
-        }
-      });
-
-      setItems(updatedItems);
+        setColumns(updatedColumns);
+      }
     }
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Board>
-        <KanbanBoard columns={items} />
+        <KanbanBoard columns={columnsArray} />
       </Board>
     </DragDropContext>
   );
