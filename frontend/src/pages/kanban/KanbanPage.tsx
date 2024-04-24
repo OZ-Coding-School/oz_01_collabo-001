@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import KanbanBoardContainer from "../../components/Kanban/KanbanBoardContainer";
 
 const KanbanPage = () => {
   return (
@@ -79,49 +80,12 @@ const KanbanPage = () => {
   );
 };
 
-const Board = styled.div`
-  display: flex;
-  justify-content: space-around;
-  padding: 0;
-  background: #eaeaea;
-`;
-
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
-  background-color: #f5f5f5;
   min-height: 100vh;
   width: 100%;
-`;
-
-const NavigationBar = styled.nav`
-  width: 100%;
-  padding: 1rem 0;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  ul {
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    padding: 0;
-    margin: 0;
-  }
-
-  li {
-    display: inline;
-  }
-
-  a {
-    text-decoration: none;
-    color: #333;
-    padding: 0.5rem 1rem;
-    &:hover {
-      color: #007bff;
-    }
-  }
 `;
 
 const MainContent = styled.main`
@@ -172,26 +136,6 @@ const BoardSection = styled.section`
   width: 100%;
   justify-content: space-between;
   /* Other styles */
-`;
-
-const Column = styled.div`
-  flex-grow: 1;
-  width: 25%;
-  margin: 0 0.5rem;
-  background: #fff;
-  border-radius: 4px;
-  padding: 1rem;
-  min-height: 300px;
-`;
-
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-`;
-
-const Title = styled.h2`
-  font-size: 1.25rem;
 `;
 
 export default KanbanPage;
