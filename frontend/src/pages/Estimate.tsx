@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Button from '../components/Button/Button';
-import '../styles/Estimate.css';
+import '../style/estimate.css';
 
 
 interface Option {
@@ -77,7 +77,9 @@ const Estimate = () => {
       <p className="totaltext">${total.toLocaleString()} {hasExtras && ' + optional extras'}</p>
 			{/* <button onClick={() => alert('Your quote has been submitted!')}>Submit</button> */}
 			</div>
+      <div className='postmyjob-bt'>
       <Button size='md' variant='primary' onClick={signup}>Post My Job Now</Button>
+      </div>
     </div>
   );
 };

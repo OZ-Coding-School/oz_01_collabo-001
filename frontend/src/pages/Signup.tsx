@@ -1,11 +1,26 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import Nav from '../components/Nav'; // Nav 컴포넌트를 가져옵니다.
 
-import { styled } from "styled-components";
 import { IoBusiness } from "react-icons/io5";
 import { MdOutlinePerson2 } from "react-icons/md";
+import { styled } from "styled-components";
 
 const Signup: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleBusinessButtonClick = () => {
+    console.log("Business button clicked");
+    // 여기에 클릭 시 수행할 동작을 추가하세요.
+    navigate('/signup-employer')
+  };
+  
+  // Freelancers 버튼 클릭 시 실행될 함수
+  const handleFreelancersButtonClick = () => {
+    console.log("Freelancers button clicked");
+    // 여기에 클릭 시 수행할 동작을 추가하세요.
+    navigate('/signup-employer')
+  };
   return (
     <>
       <Nav /> {/* 네비게이션 바를 레이아웃에 포함시킵니다. */}
@@ -26,16 +41,6 @@ const Signup: React.FC = () => {
       </Wrapper>
     </>
   );
-};
-const handleBusinessButtonClick = () => {
-  console.log("Business button clicked");
-  // 여기에 클릭 시 수행할 동작을 추가하세요.
-};
-
-// Freelancers 버튼 클릭 시 실행될 함수
-const handleFreelancersButtonClick = () => {
-  console.log("Freelancers button clicked");
-  // 여기에 클릭 시 수행할 동작을 추가하세요.
 };
 
 export default Signup;
@@ -76,8 +81,8 @@ const IconWrapper = styled.div`
   padding: 20px; /* 내부 여백 추가 */
   transition: border-color 0.3s, color 0.3s; /* 테두리 색상 및 텍스트 색상 변화에 대한 전환을 추가합니다. */
   &:hover {
-    border-color: blue; /* 마우스를 가져다 대면 파랑색으로 테두리 색상을 변경합니다. */
-    color: blue; /* 마우스를 가져다 대면 파랑색으로 텍스트 색상을 변경합니다. */
+    border-color: #0067FB; /* 마우스를 가져다 대면 파랑색으로 테두리 색상을 변경합니다. */
+    color: #0067FB; /* 마우스를 가져다 대면 파랑색으로 텍스트 색상을 변경합니다. */
   }
 `
 

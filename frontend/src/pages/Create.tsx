@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import MultiSelect from "../components/CheckBox/MultiSelect";
 import TotalPrice from "../components/TotalPrice/TotalPrice";
-import '../styles/Create.css';
+import '../style/Create.css';
 
 const Create = () => {
     // 이 객체는 각 MultiSelect의 초기 상태를 저장합니다.

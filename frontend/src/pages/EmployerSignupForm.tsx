@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { getCountryCodes } from "../api/signup/signupUserApi";
 import Button from "../components/Button/Button";
 import ErrorMessage from "../components/ErrorMessage";
@@ -13,7 +14,7 @@ import {
   CountryCode,
   EmployerSignupFormInputs,
 } from "../interface/signup/types";
-import "../style/FreelancerSignupForm.css";
+import "../style/signup/FreelancerSignupForm.css";
 
 /*
 const countryCodes = [
@@ -143,6 +144,12 @@ const EmployerSignupForm = () => {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   }
+  // 버튼 클릭하면 화면 넘어가는 기능
+  const navigate = useNavigate();
+    const  joinclick = () => {
+      navigate('/complete-registration')
+    }
+
 
   // 이메일 인증 코드 확인 버튼 클릭 시
   const handleVerifyEmailCode = (e: React.MouseEvent<HTMLElement>) => {
@@ -598,7 +605,7 @@ const EmployerSignupForm = () => {
           </span>
         </label>
 
-        <Button size={"lg"} variant={"primary"} type="submit">
+        <Button size={"lg"} variant={"primary"} type="submit" onClick={joinclick}>
           Join
         </Button>
         <span className="signup__form__login">

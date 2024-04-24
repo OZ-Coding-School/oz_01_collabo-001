@@ -1,9 +1,7 @@
-import {useState} from "react";
-import { styled } from "styled-components";
+import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
+import { styled } from "styled-components";
 import { login } from "../api/login";
-import GoogleImage from "/images/google_round@2x.png";
-import AppleImage from "/images/appleid_round@2x.png";
 import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 
@@ -54,11 +52,11 @@ const HomeLogin = () => {
         <CustomLink to="/signup">SignIn</CustomLink>
     </Form>
     
-    <Title2>SNS Login</Title2>
-    <SnsButton>
+    {/* <Title2>SNS Login</Title2> */}
+    {/* <SnsButton>
         <Googlebtn><img src={GoogleImage} alt="Google" /></Googlebtn> 
         <Applebtn><img src={AppleImage} alt="Apple" /></Applebtn>
-    </SnsButton>
+    </SnsButton> */}
 </Wrapper>
 );
 };
@@ -103,33 +101,6 @@ display: flex;
 height:100%;
 flex-direction: column;
 `
-
-
-// const Input = styled.input`
-// font-size: 14px;
-// height: 52px;
-// border-radius: 10px;
-// border: 2px solid lightgrey;
-// padding: 0 20px;
-// margin-bottom: 25px; /* 입력란 간격 추가 */
-//   width: 400px; /* 입력란 너비 조정 */
-// &: placeholder {
-//   color: darkgrey
-//   font-size: 20px;
-//   font-weight: 700;
-//   margin-bottom: 30px;
-// }
-// `
-// const Button = styled.button`
-// font-size: 14px;
-// background-color: #0067FB;
-// color: white;
-// height: 52px;
-// border-radius: 10px;
-// border: none;
-// padding: 15px 40px;
-
-// `
 const CustomLink = styled(Link)`
 font-size:14px;
 margin-top: 20px;
@@ -143,47 +114,46 @@ margin-top: 10px; /* 입력란 간격 추가 */
     text-decoration: none;
 }
 `
-const Title2 = styled.div`
-font-size: 14px;
-margin-top: 90px;
-border-top: 2px solid lightgrey;
-width: 400px; /* 선의 너비를 부모 요소의 너비와 일치시킵니다. */
-text-align: center;
+// const Title2 = styled.div`
+// font-size: 14px;
+// margin-top: 90px;
+// border-top: 2px solid lightgrey;
+// width: 400px; /* 선의 너비를 부모 요소의 너비와 일치시킵니다. */
+// text-align: center;
 
-padding-top: 10px;
-}
-`
+// padding-top: 10px;
+// `;
 
-const SnsButton = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 300px; /* 또는 다른 적절한 너비 */
-  margin-top: 40px;
-`;
+// const SnsButton = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   width: 300px; /* 또는 다른 적절한 너비 */
+//   margin-top: 40px;
+// `;
 
-const Googlebtn = styled.button`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0; /* 패딩 제거 */
-  border: none; /* 테두리 제거 */
-  background: none; /* 배경 제거 */
-  width: 100px; /* 너비 조절 */
-  height: 40px; /* 높이 조절 */
-`;
+// const Googlebtn = styled.button`
+//   flex: 1;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   padding: 0; /* 패딩 제거 */
+//   border: none; /* 테두리 제거 */
+//   background: none; /* 배경 제거 */
+//   width: 100px; /* 너비 조절 */
+//   height: 40px; /* 높이 조절 */
+// `;
 
-const Applebtn = styled.button`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0; /* 패딩 제거 */
-  border: none; /* 테두리 제거 */
-  background: none; /* 배경 제거 */
-  width: 100px; /* 너비 조절 */
-  height: 40px; /* 높이 조절 */
-`;
+// const Applebtn = styled.button`
+//   flex: 1;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   padding: 0; /* 패딩 제거 */
+//   border: none; /* 테두리 제거 */
+//   background: none; /* 배경 제거 */
+//   width: 100px; /* 너비 조절 */
+//   height: 40px; /* 높이 조절 */
+// `;
 export default HomeLogin
 
 // import {useState} from "react";

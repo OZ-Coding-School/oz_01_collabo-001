@@ -1,16 +1,21 @@
-import { styled } from "styled-components";
 import { FaRegCircleCheck } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { styled } from "styled-components";
 import Button from "../components/Button/Button";
 
 const CompleteRegistration: React.FC = () => {
+  const nav = useNavigate();
+  const mypageclick = () => {
+    nav('/mypage')
+  }
     return (
       <Wrapper>
         <IconContainer>
-             <FaRegCircleCheck />
+             <FaRegCircleCheck color="#00b13b"/>
         </IconContainer>
         <Title>Your public profile has been created</Title>
-        <Button variant="secondary" size="md" style={{ width: '300px', height: 'auto', marginBottom: '10px' }}>View my profile</Button>
-        <Button variant="outlineSecondary" size="md" style={{ width: '300px', height: 'auto' }}>Manage my account</Button>
+        <Button variant="primary" size="md" style={{ width: '300px', height: 'auto', marginBottom: '10px' }}>View my profile</Button>
+        <Button variant="outlinePrimary" size="md" style={{ width: '300px', height: 'auto' }} onClick={mypageclick}>Manage my account</Button>
 
       </Wrapper>
     );

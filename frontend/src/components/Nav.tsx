@@ -1,4 +1,4 @@
-import { styled } from "styled-components"
+import { styled } from "styled-components";
 
 const Nav = () => {
   return (
@@ -7,7 +7,7 @@ const Nav = () => {
        <Logo src="/images/logo.png" alt="logo" />
 
        <Menu>
-          <MenuItem href="#">My Account</MenuItem>
+          <MenuItem href="/mypage">My Account</MenuItem>
           <MenuItem href="#">Hire Talent</MenuItem>
           <MenuItem href="#">Find Work</MenuItem>
         </Menu> 

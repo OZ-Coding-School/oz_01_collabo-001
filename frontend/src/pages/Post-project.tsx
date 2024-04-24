@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaCircleCheck } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button/Button";
-import '../styles/PostProject.css';
+import '../style/PostProject.css';
 
 const PostProject = () => {
 
@@ -35,7 +35,7 @@ const handleBlur = () => {
 			return; // 함수 종료
 		}
 		alert('입력한 요쳥사항: ' + value);
-		nav('/createtwo')
+		nav('/create')
 		console.log('submit');
 	}
 

@@ -45,12 +45,13 @@ const PageContainer = styled.div`
   align-items: center;
   min-height: 100vh;
   width: 100%;
+  margin-top: 100px;
 `;
 
 
 const MainContent = styled.main`
   flex-grow: 1;
-  width: 80vw;
+  max-width: 1280px;
 `;
 
 const ProjectSection = styled.section`
