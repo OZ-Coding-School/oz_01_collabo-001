@@ -146,10 +146,9 @@ const EmployerSignupForm = () => {
   }
   // 버튼 클릭하면 화면 넘어가는 기능
   const navigate = useNavigate();
-    const  joinclick = () => {
-      navigate('/complete-registration')
-    }
-
+  const joinclick = () => {
+    navigate("/complete-registration");
+  };
 
   // 이메일 인증 코드 확인 버튼 클릭 시
   const handleVerifyEmailCode = (e: React.MouseEvent<HTMLElement>) => {
@@ -605,7 +604,12 @@ const EmployerSignupForm = () => {
           </span>
         </label>
 
-        <Button size={"lg"} variant={"primary"} type="submit" onClick={joinclick}>
+        <Button
+          size={"lg"}
+          variant={"primary"}
+          type="submit"
+          onClick={joinclick}
+        >
           Join
         </Button>
         <span className="signup__form__login">

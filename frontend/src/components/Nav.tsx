@@ -1,48 +1,54 @@
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 const Nav = () => {
+  const navigate = useNavigate();
+  const mypageclick = () => {
+    navigate("/mypage");
+  };
+
   return (
     <NavWrapper>
-       <Box> 
-       <Logo src="/images/logo.png" alt="logo" />
+      <Box>
+        <Logo src="/images/logo.png" alt="logo" onClick={mypageclick} />
 
-       <Menu>
+        <Menu>
           <MenuItem href="/mypage">My Account</MenuItem>
           <MenuItem href="#">Hire Talent</MenuItem>
           <MenuItem href="#">Find Work</MenuItem>
-        </Menu> 
+        </Menu>
       </Box>
-        
     </NavWrapper>
-  )
-}
+  );
+};
 
 const NavWrapper = styled.nav`
-  position: fixed; 
-  top: 0; 
-  width: 100%; 
-  z-index: 999; 
-  background-color: #ffffff; 
-  color: #000000; 
-  border: 1px solid #EAEDEF;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #eaedef;
 `;
 
 const Logo = styled.img`
-  width: 184px;
-  height: 56px;
+  width: 148px;
+  height: auto;
+  cursor: pointer;
 `;
 
 const Box = styled.div`
-  width: 100%; 
-  max-width: 1280px; 
-  height: 80px; 
-  padding: 10px 24px; 
-  margin: 0 auto; 
-  display: flex; 
+  width: 100%;
+  max-width: 1280px;
+  height: 80px;
+  padding: 10px 24px;
+  margin: 0 auto;
+  display: flex;
   justify-content: space-between; /* 로고와 메뉴 간격을 벌리기 위해 */
-  align-items: center;  /* 로고와 메뉴를 수직 정렬 */
+  align-items: center; /* 로고와 메뉴를 수직 정렬 */
 `;
-  
+
 const Menu = styled.ul`
   list-style: none;
   margin: 0;
@@ -69,9 +75,4 @@ const MenuItem = styled.a`
 //     // paddig: 10px 24px;
 // `;
 
-
-
-
-
-
-export default Nav
+export default Nav;
