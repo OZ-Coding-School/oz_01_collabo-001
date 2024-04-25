@@ -54,7 +54,7 @@ class SendEmail(APIView):
                 return Response({'message': 'Successfully sent the authentication email'}, status=status.HTTP_200_OK)  # 성공시 메세지 반환
             except Exception as e:
                 return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)  # 실패시 에러내용 반환
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER)
+        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 class VerifyEmail(APIView):
     serializer_class = TokenVerification
