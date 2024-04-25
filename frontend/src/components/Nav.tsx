@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 const Nav = () => {
   const navigate = useNavigate();
   const mypageclick = () => {
-    navigate("/mypage");
+    navigate("/");
   };
 
   return (
