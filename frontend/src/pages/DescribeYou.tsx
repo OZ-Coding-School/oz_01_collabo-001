@@ -1,15 +1,18 @@
-
-import React, { useState, ChangeEvent, useRef } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import UserProfileImage from "../components/ProfileImage/UserProfileImage";
 import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
+import UserProfileImage from "../components/ProfileImage/UserProfileImage";
 
-const defaultImageUrl = "https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427_1280.jpg";
+const defaultImageUrl =
+  "https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427_1280.jpg";
 
 const DescribeYou: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedSubCategories, setSelectedSubCategories] = useState<{ category: string; subCategory: string }[]>([]);
+  const [selectedSubCategories, setSelectedSubCategories] = useState<
+    { category: string; subCategory: string }[]
+  >([]);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null); // useRef로 input 요소에 대한 참조 생성
@@ -23,9 +26,14 @@ const DescribeYou: React.FC = () => {
   const handleSubCategoryClick = (subCategory: string) => {
     setSelectedSubCategories((prevSubCategories) => {
       const category = selectedCategory || "";
-      const index = prevSubCategories.findIndex((item) => item.subCategory === subCategory && item.category === category);
+      const index = prevSubCategories.findIndex(
+        (item) => item.subCategory === subCategory && item.category === category
+      );
       if (index !== -1) {
-        return [...prevSubCategories.slice(0, index), ...prevSubCategories.slice(index + 1)];
+        return [
+          ...prevSubCategories.slice(0, index),
+          ...prevSubCategories.slice(index + 1),
+        ];
       } else {
         return [...prevSubCategories, { category, subCategory }];
       }
@@ -34,7 +42,10 @@ const DescribeYou: React.FC = () => {
 
   const removeSubCategory = (category: string, subCategory: string) => {
     setSelectedSubCategories((prevSubCategories) =>
-      prevSubCategories.filter((item) => !(item.category === category && item.subCategory === subCategory))
+      prevSubCategories.filter(
+        (item) =>
+          !(item.category === category && item.subCategory === subCategory)
+      )
     );
   };
 
@@ -56,141 +67,243 @@ const DescribeYou: React.FC = () => {
     }
   };
 
-//파일
-const getFileName = (file: File) => {
-  return file.name;
-};
+  //파일
+  const getFileName = (file: File) => {
+    return file.name;
+  };
 
-const removeFile = (file: File) => {
-  setSelectedFiles((prevFiles) => prevFiles.filter((prevFile) => prevFile !== file));
-};
+  const removeFile = (file: File) => {
+    setSelectedFiles((prevFiles) =>
+      prevFiles.filter((prevFile) => prevFile !== file)
+    );
+  };
 
-const handleAttachFilesClick = () => {
-  if (attachmentFileInputRef.current) {
-    attachmentFileInputRef.current.click();
-  }
-};
+  const handleAttachFilesClick = () => {
+    if (attachmentFileInputRef.current) {
+      attachmentFileInputRef.current.click();
+    }
+  };
 
-// //새로 업로드시 기존 업로드 파일 리셋
-// const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-//   const files = event.target.files;
-//   if (files) {
-//     const fileList = Array.from(files);
-//     setSelectedFiles(fileList);
-//   }
-// };
+  // //새로 업로드시 기존 업로드 파일 리셋
+  // const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const files = event.target.files;
+  //   if (files) {
+  //     const fileList = Array.from(files);
+  //     setSelectedFiles(fileList);
+  //   }
+  // };
 
-const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-  const files = event.target.files;
-  if (files) {
-    const fileList = Array.from(files);
-    setSelectedFiles((prevFiles) => [...prevFiles, ...fileList]);
-  }
-};
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const fileList = Array.from(files);
+      setSelectedFiles((prevFiles) => [...prevFiles, ...fileList]);
+    }
+  };
   // 각 카테고리 항목들
   const categories = [
     {
       name: "Programming & Tech",
-      subCategories: ["Website Development", "Website Platforms", "Website Maintenance", "AI Development", "Chatbot Development", 
-      "Game Development","Mobile App Development", "Wearable App Development", "Support & Cybersecurity", "Software Development", "Blockchain & Cryptocurrency", "Miscellaneous" ],
+      subCategories: [
+        "Website Development",
+        "Website Platforms",
+        "Website Maintenance",
+        "AI Development",
+        "Chatbot Development",
+        "Game Development",
+        "Mobile App Development",
+        "Wearable App Development",
+        "Support & Cybersecurity",
+        "Software Development",
+        "Blockchain & Cryptocurrency",
+        "Miscellaneous",
+      ],
     },
     {
       name: "Graphics & Design",
-      subCategories: ["Logo & Brand Identity", "Art & Illustration", "Web & App Design", "Product & Gaming", "Print Design",
-        "Visual Design", "Marketing Design", "Packaging & Covers", "Architecture & Building Design", "Fashion & Merchandise", "3D Design", "Other"],
+      subCategories: [
+        "Logo & Brand Identity",
+        "Art & Illustration",
+        "Web & App Design",
+        "Product & Gaming",
+        "Print Design",
+        "Visual Design",
+        "Marketing Design",
+        "Packaging & Covers",
+        "Architecture & Building Design",
+        "Fashion & Merchandise",
+        "3D Design",
+        "Other",
+      ],
     },
     {
       name: "Digital Marketing",
-      subCategories: ["Search", "Social", "Methods & Techniques", "Channel Specific", "Analytics & Strategy", "Industry & Purpose-specific", "Other"],
+      subCategories: [
+        "Search",
+        "Social",
+        "Methods & Techniques",
+        "Channel Specific",
+        "Analytics & Strategy",
+        "Industry & Purpose-specific",
+        "Other",
+      ],
     },
     {
       name: "Video & Animation",
-      subCategories: ["Editing & Post-Production", "Social & Marketing Videos", "Animation", "Motion Graphics", "Filmed Video Production",
-        "Explainer Videos", "Product Videos", "AI Videos", "Photography", "Other"
+      subCategories: [
+        "Editing & Post-Production",
+        "Social & Marketing Videos",
+        "Animation",
+        "Motion Graphics",
+        "Filmed Video Production",
+        "Explainer Videos",
+        "Product Videos",
+        "AI Videos",
+        "Photography",
+        "Other",
       ],
     },
     {
       name: "Writing",
-      subCategories: ["Content Writing", "Industry Specific Content", "Editing & Critique", "Book & eBook Publishing", "Career Writing", "Business & Marketing Copy"
-        , "Transcription", "Other"
+      subCategories: [
+        "Content Writing",
+        "Industry Specific Content",
+        "Editing & Critique",
+        "Book & eBook Publishing",
+        "Career Writing",
+        "Business & Marketing Copy",
+        "Transcription",
+        "Other",
       ],
     },
     {
       name: "Business",
-      subCategories: ["Business Management", "E-Commerce Management", "Software Management", "AI Strategy & AI Lessons", "Accounting & Finance", "Legal Services", "Sales & Customer Care", "Professional Development", "Other"],
+      subCategories: [
+        "Business Management",
+        "E-Commerce Management",
+        "Software Management",
+        "AI Strategy & AI Lessons",
+        "Accounting & Finance",
+        "Legal Services",
+        "Sales & Customer Care",
+        "Professional Development",
+        "Other",
+      ],
     },
     {
       name: "Consulting",
-      subCategories: ["Business Consultants", "Marketing Strategy", "Data Consulting", "Coaching & Advice", "Tech Consulting", "Mentorship"],
+      subCategories: [
+        "Business Consultants",
+        "Marketing Strategy",
+        "Data Consulting",
+        "Coaching & Advice",
+        "Tech Consulting",
+        "Mentorship",
+      ],
     },
     {
       name: "Data",
-      subCategories: ["Data Science & ML", "Data Analysis", "Data Collection", "Data Management"],
+      subCategories: [
+        "Data Science & ML",
+        "Data Analysis",
+        "Data Collection",
+        "Data Management",
+      ],
     },
     {
       name: "AI Service",
-      subCategories: ["AI Development", "Data", "AI for Business", "AI Artist", "AI Audio", "AI Video", "AI Content" ],
+      subCategories: [
+        "AI Development",
+        "Data",
+        "AI for Business",
+        "AI Artist",
+        "AI Audio",
+        "AI Video",
+        "AI Content",
+      ],
     },
-   
   ];
+
+  const navigate = useNavigate();
+
+  const CreateProfileClick = () => {
+    alert(
+      "Your information has been temporarily saved.Please complete your registration."
+    );
+    navigate("/signup");
+  };
 
   return (
     <Wrapper>
-      <Title>Tell us about yourself</Title>
-      <Describtion>Fill out your profile for clients to understand your services.</Describtion>
-      <Boxes>
-        <Box>
-          <h4>Select a category</h4>
-          <Category>
-            {categories.map(({ name }, index) => (
-              <CategoryItem
-                key={index}
-                selected={selectedCategory === name}
-                onClick={() => handleCategoryClick(name)}
-              >
-                {name}
-              </CategoryItem>
-            ))}
-          </Category>
-        </Box>
-        <Box>
-          <h4>Select sub-categories</h4>
-          <SelectedSubCategoriesWrapper>
-            <SelectedSubCategories>
-              {selectedCategory &&
-                categories
-                  .find((category) => category.name === selectedCategory)
-                  ?.subCategories.map((subCategory, index) => (
-                    <SubCategoryBox
-                      key={index}
-                      selected={selectedSubCategories.some((item) => item.subCategory === subCategory)}
-                      onClick={() => handleSubCategoryClick(subCategory)}
-                    >
-                      {subCategory}
-                    </SubCategoryBox>
-                  ))}
-            </SelectedSubCategories>
-          </SelectedSubCategoriesWrapper>
-        </Box>
-        <Box>
-          <h4>Selected skill</h4>
-          <SelectedSkillsWrapper>
-            <SelectedSkills>
-              {selectedSubCategories.map(({ category, subCategory }, index) => (
-                <SelectedSkill key={index}>
-                  {subCategory} ({category})
-                  <RemoveButton onClick={() => removeSubCategory(category, subCategory)}>x</RemoveButton>
-                </SelectedSkill>
+      <PropillContainer>
+        <Title>Tell us about yourself</Title>
+        <Describtion>
+          Fill out your profile for clients to understand your services.
+        </Describtion>
+        <Boxes>
+          <Box>
+            <h4>Select a category</h4>
+            <Category>
+              {categories.map(({ name }, index) => (
+                <CategoryItem
+                  key={index}
+                  selected={selectedCategory === name}
+                  onClick={() => handleCategoryClick(name)}
+                >
+                  {name}
+                </CategoryItem>
               ))}
-            </SelectedSkills>
-          </SelectedSkillsWrapper>
-        </Box>
-      </Boxes>
+            </Category>
+          </Box>
+          <Box>
+            <h4>Select sub-categories</h4>
+            <SelectedSubCategoriesWrapper>
+              <SelectedSubCategories>
+                {selectedCategory &&
+                  categories
+                    .find((category) => category.name === selectedCategory)
+                    ?.subCategories.map((subCategory, index) => (
+                      <SubCategoryBox
+                        key={index}
+                        selected={selectedSubCategories.some(
+                          (item) => item.subCategory === subCategory
+                        )}
+                        onClick={() => handleSubCategoryClick(subCategory)}
+                      >
+                        {subCategory}
+                      </SubCategoryBox>
+                    ))}
+              </SelectedSubCategories>
+            </SelectedSubCategoriesWrapper>
+          </Box>
+          <Box>
+            <h4>Selected skill</h4>
+            <SelectedSkillsWrapper>
+              <SelectedSkills>
+                {selectedSubCategories.map(
+                  ({ category, subCategory }, index) => (
+                    <SelectedSkill key={index}>
+                      {subCategory} ({category})
+                      <RemoveButton
+                        onClick={() => removeSubCategory(category, subCategory)}
+                      >
+                        x
+                      </RemoveButton>
+                    </SelectedSkill>
+                  )
+                )}
+              </SelectedSkills>
+            </SelectedSkillsWrapper>
+          </Box>
+        </Boxes>
 
-      <ProfileWrapper>
-        <ProfilePhoto>
-          <UserProfileImage size="large" imageUrl={selectedPhoto || defaultImageUrl} />
-          
+        <ProfileWrapper>
+          <ProfilePhoto>
+            <UserProfileImage
+              size="large"
+              imageUrl={selectedPhoto || defaultImageUrl}
+            />
+
             <InputFile
               type="file"
               accept="image/*"
@@ -198,84 +311,108 @@ const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
               ref={fileInputRef}
             />
             <PhotoButtonWrapper>
-            <Button variant="primary" size="sm" onClick={handleAddPhotoClick}>
-              Add Photo
-            </Button>
+              <Button
+                variant="outlinePrimary"
+                size="sm"
+                onClick={handleAddPhotoClick}
+              >
+                Add Photo
+              </Button>
             </PhotoButtonWrapper>
+          </ProfilePhoto>
+          <WriteWraapper>
+            <WhatWrapper>
+              <h3>What do you do?</h3>
+              <p>Write one line descrition about yourself.</p>
 
-          
-        </ProfilePhoto>
-        <WriteWraapper>
-          <WhatWrapper>
-          <h3>What do you do?</h3>
-          <p>Write one line descrition about yourself.</p>
+              <Input type="text" style={{ width: "700px" }} />
 
-          <Input type="text"  style={{ width: '700px'}}/>
-
-          <h3>Describe yourself.</h3>
-          <p>Describe your top skills, strengths, and expriences in detail.</p>
-          <Input type="text"  style={{width: '700px', height:'90px'}}/>
-          </WhatWrapper>
-          <DescribeWrapper>
-          <FileWrapper>
-            <AttachButtonWrapper>
-            <Button variant="primary" size="sm" onClick={handleAttachFilesClick}>
-              Attach files
-            </Button>
-            </AttachButtonWrapper>
-  {/* 첨부 파일 선택 input */}
-            <InputFile
-              type="file"
-              accept="*"
-              multiple
-              onChange={handleFileUpload}
-              ref={attachmentFileInputRef}  />
-  {/* 선택된 파일들 목록 */}
-              {selectedFiles.map((file, index) => (
-              <SelectedFile key={index}>
-                {getFileName(file)} {/* 파일명 표시 */}
-            <RemoveButton onClick={() => removeFile(file)}>x</RemoveButton> {/* 파일 삭제 버튼 */}
-              </SelectedFile>
-            ))}
-          </FileWrapper>
-        <p>You may attach up to 10 files under the size of xxMB each. Include work samples or other supporting documents.</p>
-        </DescribeWrapper>
-        <RateWrapper>
-        <h3> Set Your freelance rate.</h3>
-        <Input type="text"  placeholder="$ 00.00" style={{ width: '40px' }} /> <p>(USD) / hour OR</p>  <Input type="text"  placeholder="$ 00.00" style={{ width: '40px' }}/> <p>(USD) / weekly</p> 
-
-
-        </RateWrapper>
-        <Button variant="primary" size="sm">
-              Create Profile
-        </Button>
-        </WriteWraapper>
-      </ProfileWrapper>
+              <h3>Describe yourself.</h3>
+              <p>
+                Describe your top skills, strengths, and expriences in detail.
+              </p>
+              <Input type="text" style={{ width: "700px", height: "90px" }} />
+            </WhatWrapper>
+            <DescribeWrapper>
+              <FileWrapper>
+                <AttachButtonWrapper>
+                  <Button
+                    variant="outlinePrimary"
+                    size="sm"
+                    onClick={handleAttachFilesClick}
+                  >
+                    Attach files
+                  </Button>
+                </AttachButtonWrapper>
+                {/* 첨부 파일 선택 input */}
+                <InputFile
+                  type="file"
+                  accept="*"
+                  multiple
+                  onChange={handleFileUpload}
+                  ref={attachmentFileInputRef}
+                />
+                {/* 선택된 파일들 목록 */}
+                {selectedFiles.map((file, index) => (
+                  <SelectedFile key={index}>
+                    {getFileName(file)} {/* 파일명 표시 */}
+                    <RemoveButton onClick={() => removeFile(file)}>
+                      x
+                    </RemoveButton>{" "}
+                    {/* 파일 삭제 버튼 */}
+                  </SelectedFile>
+                ))}
+              </FileWrapper>
+              <p>
+                You may attach up to 10 files under the size of xxMB each.
+                Include work samples or other supporting documents.
+              </p>
+            </DescribeWrapper>
+            <RateWrapper>
+              <h3> Set Your freelance rate.</h3>
+              <Input
+                type="text"
+                placeholder="$ 00.00"
+                style={{ width: "40px" }}
+              />{" "}
+              <p>(USD) / hour OR</p>{" "}
+              <Input
+                type="text"
+                placeholder="$ 00.00"
+                style={{ width: "40px" }}
+              />{" "}
+              <p>(USD) / weekly</p>
+            </RateWrapper>
+            <ButtonDiv>
+              <Button variant="primary" size="md" onClick={CreateProfileClick}>
+                Create Profile
+              </Button>
+            </ButtonDiv>
+          </WriteWraapper>
+        </ProfileWrapper>
+      </PropillContainer>
     </Wrapper>
   );
 };
 
-
-const AttachButtonWrapper  = styled.div`
-margin-top: 10px;
+const AttachButtonWrapper = styled.div`
+  margin-top: 10px;
 `;
 
-const PhotoButtonWrapper  = styled.div`
-margin-left:45px;
-margin-top: 10px;
+const PhotoButtonWrapper = styled.div`
+  margin-left: 45px;
+  margin-top: 10px;
 `;
 
-const WhatWrapper  = styled.div`
+const WhatWrapper = styled.div``;
 
+const DescribeWrapper = styled.div`
+  margin-bottom: 40px;
 `;
 
-const DescribeWrapper  = styled.div`
-margin-bottom: 40px;
-`;
-
-const RateWrapper  = styled.div`
-display: flex;
-margin-bottom: 30px;
+const RateWrapper = styled.div`
+  display: flex;
+  margin-bottom: 30px;
 `;
 
 const SelectedFile = styled.div`
@@ -284,25 +421,20 @@ const SelectedFile = styled.div`
   font-size: 13px;
 `;
 
-const FileWrapper  = styled.div`
-display: flex;
+const FileWrapper = styled.div`
+  display: flex;
 `;
-const WriteWraapper = styled.div`
-// flex: 1;
-margin-left:100px;
-
-`;
+const WriteWraapper = styled.div``;
 
 const ProfileWrapper = styled.div`
-display: flex;
-margin-top: 30px;
-margin-left:50px;
+  display: flex;
+  margin-top: 30px;
+  margin-left: 50px;
 `;
 
 const ProfilePhoto = styled.div`
-margin-top: 90px;
-// flex: 1;
-
+  margin-top: 90px;
+  margin-right: 30px;
 `;
 const InputFile = styled.input`
   display: none;
@@ -311,15 +443,22 @@ const InputFile = styled.input`
 
 // `;
 
-
 // const WriteWrapper = styled.div`
 
 // `;
 
 const Wrapper = styled.div`
-  position: relative;
   margin-top: 120px;
-  
+  width: 100%;
+  margin-bottom: 80px;
+`;
+
+const PropillContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
 `;
 
 const Title = styled.h3``;
@@ -332,7 +471,7 @@ const Boxes = styled.div`
 `;
 const Box = styled.div`
   flex: 1;
-  margin-left:30px;
+  margin-left: 30px;
 `;
 
 const Category = styled.div`
@@ -406,7 +545,6 @@ const SelectedSkill = styled.div`
   margin-bottom: 5px;
   border: 1px solid #ccc;
   font-size: 13px;
-
 `;
 
 const RemoveButton = styled.button`
@@ -417,6 +555,11 @@ const RemoveButton = styled.button`
   cursor: pointer;
 `;
 
+const ButtonDiv = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 80px;
+`;
+
 export default DescribeYou;
-
-
