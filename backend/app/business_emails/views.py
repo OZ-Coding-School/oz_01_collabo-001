@@ -25,10 +25,12 @@ class SendEmail(APIView):
             user_name = request.data['first_name']
             user_email = request.data['email']  # user_email 입력값 받기
             token = self.generate_numeric_token() # 토큰 생성
-            title = "Verify your email adress to finish signing up for Talent Kloud"
+            title = "Verify your email address to finish signing up for Talent Kloud"
             email_content = F'''
             Hi {user_name},
+
             Please verify your email address to complete the registration process and get access to exclusive job listings at Talent Kloud. 
+            
             All you have to do is enter this verification code in the window where you started creating your account.
 
             Don't share this code with anyone.
@@ -38,6 +40,7 @@ class SendEmail(APIView):
             CODE : {token}
 
             Regards,
+
             Talent Kloud
             '''
             email = EmailMessage(
