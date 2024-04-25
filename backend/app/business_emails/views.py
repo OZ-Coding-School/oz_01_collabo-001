@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.mail import EmailMessage
 from django.core.cache import cache
-from .serializers import BusinessUserEmail as UserEmail, BusinessUserTokenVerification as TokenVerification
+from .serializers import BusinessUserEmail, BusinessUserTokenVerification as TokenVerification
 from datetime import datetime
 import uuid
 
@@ -17,17 +17,31 @@ class SendEmail(APIView):
         numeric_token = int(uuid_str, 16) % 900000 + 100000
         return numeric_token
 
-    serializer_class = UserEmail
+    serializer_class = BusinessUserEmail
     def post(self, request):
         # 정보 직렬화
-        serializer = UserEmail(data=request.data)
+        serializer = BusinessUserEmail(data=request.data)
         if serializer.is_valid():
+            user_name = request.data['first_name']
             user_email = request.data['email']  # user_email 입력값 받기
-            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 메일 발송 당시의 시간정보
             token = self.generate_numeric_token() # 토큰 생성
-            email_content = f'인증 코드: {token} 발송 시간 : {current_time}'  # 생성된 토큰을 이메일 내용에 포함
+            title = "Verify your email adress to finish signing up for Talent Kloud"
+            email_content = F'''
+            Hi {user_name},
+            Please verify your email address to complete the registration process and get access to exclusive job listings at Talent Kloud. 
+            All you have to do is enter this verification code in the window where you started creating your account.
+
+            Don't share this code with anyone.
+
+            If you did not make the request, please ignore this email.
+
+            CODE : {token}
+
+            Regards,
+            Talent Kloud
+            '''
             email = EmailMessage(
-                '사이트 인증 문자 입니다',
+                title,
                 email_content,
                 to=[user_email]
             )
