@@ -181,5 +181,5 @@ EMAIL_USE_TLS = True
 
 PASSWORD_RESET_TIMEOUT = 14400
 
-CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:5173', 'http://localhost:5173')
+CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:5173', 'http://localhost:5173', 'https://front--mellow-eclair-43eda6.netlify.app')
 CORS_ALLOW_CREDENTIALS = True
