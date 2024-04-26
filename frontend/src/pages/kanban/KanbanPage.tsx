@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import KanbanBoardContainer from "../../components/Kanban/KanbanBoardContainer";
+import { Tickets } from "../../interface/kanban/types";
 
 const projects = [
   {
@@ -27,10 +28,70 @@ const projects = [
           },
         ],
       },
-      // 추가 스프린트 구성
+      {
+        id: 102,
+        title: "Sprint 102",
+        description: "Description of Sprint 102",
+        tickets: [
+          {
+            id: "1003",
+            title: "Ticket 3",
+            description: "Improve performance",
+            condition: "done",
+          },
+          {
+            id: "1004",
+            title: "Ticket 4",
+            description: "Refactor code",
+            condition: "todo",
+          },
+          {
+            id: "1005",
+            title: "Ticket 5",
+            description: "Add unit tests",
+            condition: "in_progress",
+          },
+        ],
+      },
+      {
+        id: 103,
+        title: "Sprint 103",
+        description: "Description of Sprint 103",
+        tickets: [
+          {
+            id: "1006",
+            title: "Ticket 6",
+            description: "Implement logging",
+            condition: "todo",
+          },
+          {
+            id: "1007",
+            title: "Ticket 7",
+            description: "Create documentation",
+            condition: "in_progress",
+          },
+          {
+            id: "1008",
+            title: "Ticket 8",
+            description: "Deploy to staging",
+            condition: "todo",
+          },
+          {
+            id: "1009",
+            title: "Ticket 9",
+            description: "Fix critical bugs",
+            condition: "in_progress",
+          },
+          {
+            id: "1010",
+            title: "Ticket 10",
+            description: "Integrate with third-party API",
+            condition: "todo",
+          },
+        ],
+      },
     ],
   },
-  // 추가 프로젝트 구성
 ];
 
 const KanbanPage = () => {
@@ -38,26 +99,36 @@ const KanbanPage = () => {
   const [currentSprintId, setCurrentSprintId] = useState(
     projects[0].sprints[0].id
   );
+  const [currentTickets, setCurrentTickets] = useState<Tickets>(
+    projects[0].sprints[0].tickets
+  );
+  const currentTicketsMemo = useMemo(() => currentTickets, [currentTickets]);
+
+  useEffect(() => {
+    console.log("Project ID 변경:", currentProjectId);
+    const project = projects.find((p) => p.id === currentProjectId);
+    console.log("찾은 프로젝트:", project);
+    const sprint = project?.sprints.find((s) => s.id === currentSprintId);
+    console.log("찾은 스프린트:", sprint);
+    if (sprint) {
+      console.log("스프린트의 티켓:", sprint.tickets);
+      setCurrentTickets(sprint.tickets);
+    }
+  }, [currentProjectId, currentSprintId]);
 
   const currentProject = projects.find(
     (project) => project.id === currentProjectId
   );
-  const currentSprint = currentProject?.sprints.find(
-    (sprint) => sprint.id === currentSprintId
-  );
-  const currentTickets = currentSprint?.tickets || [];
 
   const handleProjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newProjectId = parseInt(e.target.value, 10);
+    console.log("프로젝트 변경:", newProjectId);
     setCurrentProjectId(newProjectId);
-    const newProject = projects.find((project) => project.id === newProjectId);
-    if (newProject && newProject.sprints[0]) {
-      setCurrentSprintId(newProject.sprints[0].id);
-    }
   };
 
   const handleSprintChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSprintId = parseInt(e.target.value, 10);
+    console.log("스프린트 변경:", newSprintId);
     setCurrentSprintId(newSprintId);
   };
 
@@ -88,7 +159,10 @@ const KanbanPage = () => {
           </div>
         </ProjectSection>
         <BoardSection>
-          <KanbanBoardContainer initialTickets={currentTickets} />
+          <KanbanBoardContainer
+            key={currentSprintId}
+            initialTickets={currentTicketsMemo}
+          />
         </BoardSection>
       </MainContent>
     </PageContainer>
