@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { getCountryCodes } from "../api/signup/signupUserApi";
+import { getCountryCodes, signupUser } from "../api/signup/signupUserApi";
 import Button from "../components/Button/Button";
 import ErrorMessage from "../components/ErrorMessage";
 import Input from "../components/Input/Input";
@@ -56,7 +56,7 @@ const EmployerSignupForm = () => {
   } = useUserIdCheck();
 
   // userId 필드의 값을 감시
-  const watchedUserId = watch("userId");
+  const watchedUserId = watch("user_id");
   const watchedValues = watch(); // 모든 필드의 값을 관찰
   console.log(watchedValues);
 
@@ -65,7 +65,7 @@ const EmployerSignupForm = () => {
 
   // 이메일 인증 코드 발송 상태
   const {
-    mutate: sendVerificationCode,
+    mutate: sendEmailVerificationCode,
     isSuccess: isSendVerificationSuccess,
     status: verificationStatus,
     // status: isSendVerificationLoading, // 'loading' | 'idle' | 'success' | 'error'
@@ -127,9 +127,11 @@ const EmployerSignupForm = () => {
     // 백엔드 API 호출이 성공적이면 타이머 시작
     // 발송 요청이 실패하면 에러 메시지 표시
     const email = watch("email");
+    const firstName = watch("first_name");
+    console.log(`First Name: ${firstName}`);
     console.log(`Email: ${email}`);
 
-    sendVerificationCode(email);
+    sendEmailVerificationCode({ email: email, first_name: firstName });
 
     // 성공했다는 여부를 어디서 꺼내어 쓸 수 있지?
 
@@ -146,9 +148,9 @@ const EmployerSignupForm = () => {
   }
   // 버튼 클릭하면 화면 넘어가는 기능
   const navigate = useNavigate();
-  const joinclick = () => {
-    navigate("/complete-registration");
-  };
+  // const joinclick = () => {
+  //   navigate("/complete-registration");
+  // };
 
   // 이메일 인증 코드 확인 버튼 클릭 시
   const handleVerifyEmailCode = (e: React.MouseEvent<HTMLElement>) => {
@@ -176,14 +178,15 @@ const EmployerSignupForm = () => {
   const handleResendVerifyEmailCode = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     const email = watch("email");
+    const firstName = watch("first_name");
     console.log(`Resending verification code to ${email}`);
-    sendVerificationCode(email);
+    sendEmailVerificationCode({ email: email, first_name: firstName });
     setTimer(300);
   };
 
   const handleUserIdCheck = async (e: React.MouseEvent) => {
     e.preventDefault();
-    const userId = watch("userId");
+    const userId = watch("user_id");
     if (!userId) {
       alert("Please enter your user ID.");
       return;
@@ -226,10 +229,29 @@ const EmployerSignupForm = () => {
   const onSubmit: SubmitHandler<EmployerSignupFormInputs> = (data, e) => {
     e?.preventDefault();
     // const { firstName, lastName, company, userId, email, password, password2, country, mobile, language } = data;
-    // const { verificationCode, agreeToTerms, countryCode, ...submitData } = data;
-    console.log("onSubmit", data);
+    const { verificationCode, agreeToTerms, countryCode, ...rest } = data;
+    // country 값을 숫자로 변환
+
+    const submitData = {
+      ...rest,
+    };
+
+    console.log(`verificationCode: ${verificationCode}`);
+    console.log(`agreeToTerms: ${agreeToTerms}`);
+    console.log(`countryCode: ${countryCode}`);
+
     // 회원가입 API 호출
-    // signupUser(submitData);
+    signupUser(submitData)
+      .then((response) => {
+        // 회원가입 성공 페이지로 리디렉션
+        console.log(response);
+        // {message: 'Successfully SignUp!'}
+        navigate("/complete-registration");
+      })
+      .catch((error) => {
+        // 에러 처리
+        console.log(error.message);
+      });
   };
 
   const closeModal = () => setIsModalOpen(false);
@@ -243,7 +265,7 @@ const EmployerSignupForm = () => {
         <div className="signup__form__id-group group">
           <div className="id-input-container">
             <Controller
-              name="userId"
+              name="user_id"
               control={control}
               rules={{
                 required: "User ID is required.",
@@ -302,7 +324,7 @@ const EmployerSignupForm = () => {
                 : "primary" // isLoading이나 isValidId가 undefined일 때 기본값
             }
             onClick={handleUserIdCheck}
-            disabled={isCheckUserIdLoading || !watch("userId")}
+            disabled={isCheckUserIdLoading || !watch("user_id")}
           >
             {isCheckUserIdLoading ? "Checking..." : "Verify"}
           </Button>
@@ -371,7 +393,7 @@ const EmployerSignupForm = () => {
         <label htmlFor="Full Name">Full Name</label>
         <div className="signup__form__name-group group">
           <Controller
-            name="firstName"
+            name="first_name"
             control={control}
             rules={{ required: "first name is required." }}
             render={({ field }) => (
@@ -383,7 +405,7 @@ const EmployerSignupForm = () => {
             )}
           />
           <Controller
-            name="lastName"
+            name="last_name"
             control={control}
             rules={{ required: "last name is required." }}
             render={({ field }) => (
@@ -514,7 +536,8 @@ const EmployerSignupForm = () => {
                   label=""
                   options={countries.map((country) => ({
                     label: `${country.en_name} (${country.number})`,
-                    value: `${country.number.replace(/[^0-9]/g, "")}`, // 지금은 DB로부터 id를 받아오지 않으므로 index를 사용
+                    //value: `${country.number.replace(/[^0-9]/g, "")}`, // 지금은 DB로부터 id를 받아오지 않으므로 index를 사용
+                    value: `${country.number}`,
                   }))}
                   selected={field.value}
                   onChange={field.onChange}
@@ -561,10 +584,13 @@ const EmployerSignupForm = () => {
           render={({ field }) => (
             <SelectComponent
               label=""
-              options={countries.map((country, index) => ({
-                label: country.en_name,
-                value: `${index + 1}`, // 지금은 DB로부터 id를 받아오지 않으므로 index를 사용
+              options={countries.map((country) => ({
+                label: `${country.en_name}`,
+                // value: `${index + 1}`, // 지금은 DB로부터 id를 받아오지 않으므로 index를 사용
+                // value: `${country.number.replace(/[^0-9]/g, "")}`, // 지금은 DB로부터 id를 받아오지 않으므로 index를 사용
+                value: `${country.id}`,
               }))}
+              // selected={field.value ? field.value.toString() : ""} // field.value를 문자열로 변환
               selected={field.value}
               {...field}
             />
@@ -580,7 +606,7 @@ const EmployerSignupForm = () => {
               label=""
               options={countries.map((country) => ({
                 label: country.en_name,
-                value: country.en_name,
+                value: `${country.number.replace(/[^0-9]/g, "")}`, // 지금은 DB로부터 id를 받아오지 않으므로 index를 사용
               }))}
               selected={field.value}
               {...field}
@@ -608,7 +634,7 @@ const EmployerSignupForm = () => {
           size={"lg"}
           variant={"primary"}
           type="submit"
-          onClick={joinclick}
+          // onClick={joinclick}
         >
           Join
         </Button>
