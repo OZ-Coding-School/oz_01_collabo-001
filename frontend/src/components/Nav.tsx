@@ -1,25 +1,46 @@
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 const Nav = () => {
-  const navigate = useNavigate();
-  const mypageclick = () => {
-    navigate("/mypage");
-  };
+    const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false); 
+    useEffect(() => {
+        const accessToken = localStorage.getItem('access');
+        const refreshToken = localStorage.getItem('refresh');
+        if (accessToken && refreshToken) {
+            setIsLoggedIn(true); 
+        } else {
+            setIsLoggedIn(false); 
+        }
+    }, [isLoggedIn]); 
 
-  return (
-    <NavWrapper>
-      <Box>
-        <Logo src="/images/logo.png" alt="logo" onClick={mypageclick} />
+    const mypageclick = () => {
+        navigate("/mypage");
+    };
 
-        <Menu>
-          <MenuItem href="/mypage">My Account</MenuItem>
-          <MenuItem href="#">Hire Talent</MenuItem>
-          <MenuItem href="#">Find Work</MenuItem>
-        </Menu>
-      </Box>
-    </NavWrapper>
-  );
+    const handleLogout = () => {
+        localStorage.removeItem('access'); 
+        localStorage.removeItem('refresh'); 
+        setIsLoggedIn(false); 
+        navigate("/"); 
+    };
+
+    return (
+        <NavWrapper>
+            <Box>
+                <Logo src="/images/logo.png" alt="logo" onClick={mypageclick} />
+                <Menu>
+                    <MenuItem to="/mypage">My Account</MenuItem>
+                    <MenuItem to="#">Hire Talent</MenuItem>
+                    <MenuItem to="#">Find Work</MenuItem>
+                    {isLoggedIn ? (
+                        <LogoutItem onClick={handleLogout}>Logout</LogoutItem>
+                    ) : null} {/* 로그인 상태일 때만 로그아웃 메뉴 표시 */}
+                </Menu>
+            </Box>
+        </NavWrapper>
+    );
 };
 
 const NavWrapper = styled.nav`
@@ -45,8 +66,8 @@ const Box = styled.div`
   padding: 10px 24px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between; /* 로고와 메뉴 간격을 벌리기 위해 */
-  align-items: center; /* 로고와 메뉴를 수직 정렬 */
+  justify-content: space-between;
+  align-items: center; 
 `;
 
 const Menu = styled.ul`
@@ -54,25 +75,22 @@ const Menu = styled.ul`
   margin: 0;
   padding: 0;
   display: flex;
-
-  align-items: center; /* 메뉴를 수직 정렬 */
+  align-items: center; 
 `;
 
-const MenuItem = styled.a`
+const MenuItem = styled(Link)`
   color: #000000;
   text-decoration: none;
   font-weight: bold;
-  margin-left: 20px; /* 메뉴 간격 조정 */
+  margin-left: 20px; 
 `;
 
-// const BlueText = styled.span`
-//     color: blue;
-//     // font-weight: bold;
-//     // position: absolute; /* 부모 요소로부터 상대적으로 위치a설정 */
-//     // top: 15px; /* 상단 위치 조정 */
-//     font-size: 34px;
-//     // left: 20px;
-//     // paddig: 10px 24px;
-// `;
+const LogoutItem = styled.li`
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 20px;
+  cursor: pointer;
+`;
 
 export default Nav;
