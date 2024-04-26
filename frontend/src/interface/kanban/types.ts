@@ -2,6 +2,7 @@ interface Ticket {
   id: string;
   title: string;
   description: string;
+  condition: string;
 }
 
 export type Tickets = Ticket[];
@@ -12,4 +13,9 @@ export type Column = {
   tickets: Tickets;
 };
 
-export type Columns = Column[];
+export interface Columns {
+  todo: Ticket[];
+  inProgress: Ticket[];
+  qa: Ticket[];
+  done: Ticket[];
+}
