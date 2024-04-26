@@ -2,10 +2,18 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import axiosInstance from "../../api/signup/axiosInstance";
 
-const sendEmailVerificationCode = async (email: string): Promise<string> => {
-  const data = JSON.stringify({ email });
+const sendEmailVerificationCode = async ({
+  email,
+  first_name,
+}: {
+  email: string;
+  first_name: string;
+}): Promise<string> => {
+  const data = JSON.stringify({ email, first_name });
   try {
-    console.log(`sendEmailVerificationCode: email=${email}`);
+    console.log(
+      `sendEmailVerificationCode: email=${email}, firstName=${first_name}`
+    );
     const response = await axiosInstance.post(
       "/api/v1/business_users/email/sendemail/", // /api/v1/business_users/email/sendemail/
       data
@@ -27,7 +35,11 @@ const sendEmailVerificationCode = async (email: string): Promise<string> => {
 };
 
 export function useSendVerificationCode() {
-  const mutation = useMutation<string, Error, string>({
+  const mutation = useMutation<
+    string,
+    Error,
+    { email: string; first_name: string }
+  >({
     mutationFn: sendEmailVerificationCode,
     onSuccess: (data: string) => {
       console.log("useSendVerificationCode: Verification code sent:", data);
