@@ -32,7 +32,7 @@ const HomeLogin = () => {
         const { 'access-token': accessToken, 'refresh-token': refreshToken }=result;
         localStorage.setItem('access',accessToken);
         localStorage.setItem('refresh',refreshToken);
-        router('/complete-registration'); // 로그인 후 CompleteRegistration 페이지로 이동
+        router('/mypage'); // 로그인 후 mypage 페이지로 이동
 
     }
   return (
