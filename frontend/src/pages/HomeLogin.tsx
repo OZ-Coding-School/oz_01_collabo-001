@@ -18,6 +18,7 @@ const HomeLogin = () => {
 
     const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
+
       try {
           // 로그인 시도
           const result = await login(user_id, password);

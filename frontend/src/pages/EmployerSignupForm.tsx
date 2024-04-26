@@ -246,7 +246,7 @@ const EmployerSignupForm = () => {
         // 회원가입 성공 페이지로 리디렉션
         console.log(response);
         // {message: 'Successfully SignUp!'}
-        navigate("/complete-registration");
+        navigate("/");
       })
       .catch((error) => {
         // 에러 처리
