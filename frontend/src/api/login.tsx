@@ -17,6 +17,19 @@ api.interceptors.request.use(
     }
 );
 
+api.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('access');
+            localStorage.removeItem('refresh');
+        }
+        return Promise.reject(error);
+    }
+);
+
 export const login = async (user_id: string, password: string) => {
     try {
         const result = await api.post("/api/v1/business_user/login/", { user_id, password });
@@ -27,3 +40,4 @@ export const login = async (user_id: string, password: string) => {
     }
 };
 
+export default api;
