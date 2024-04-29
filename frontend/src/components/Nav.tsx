@@ -3,28 +3,26 @@ import { Link, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 const Nav = () => {
-    const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     useEffect(() => {
         const accessToken = localStorage.getItem('access');
         const refreshToken = localStorage.getItem('refresh');
-        if (accessToken && refreshToken) {
-            setIsLoggedIn(true); 
-        } else {
-            setIsLoggedIn(false); 
-        }
-    }, [isLoggedIn]); 
+        setIsLoggedIn(!!accessToken && !!refreshToken);
+    }, []); 
 
     const mypageclick = () => {
         navigate("/mypage");
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('access'); 
-        localStorage.removeItem('refresh'); 
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
         setIsLoggedIn(false); 
-        navigate("/"); 
+        navigate("/");
     };
+
 
     return (
         <NavWrapper>

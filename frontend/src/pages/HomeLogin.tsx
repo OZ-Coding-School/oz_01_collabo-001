@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { styled } from "styled-components";
 import { login } from "../api/login";
@@ -12,6 +12,19 @@ const HomeLogin = () => {
     const [password,setPassword]=useState('');
     const router = useNavigate();
 
+    const isLoggedIn = () => {
+        const accessToken = localStorage.getItem('access');
+        // 로컬 스토리지에 액세스 토큰이 존재한다면 로그인 상태로 판단
+        return !!accessToken;
+    };
+
+    useEffect(() => {
+        if (isLoggedIn()) {
+            router('/mypage'); 
+        }
+    }, [router]);
+
+
 
     const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {setUser_id(e.target.value);};
     const onChangePw = (e: React.ChangeEvent<HTMLInputElement>) => {setPassword(e.target.value);};
@@ -23,12 +36,12 @@ const HomeLogin = () => {
           // 로그인 시도
           const result = await login(user_id, password);
           console.log(result);
-          const { 'access-token': accessToken, 'refresh-token': refreshToken } = result;
+          const { 'access_token': accessToken, 'refresh_token': refreshToken } = result;
           localStorage.setItem('access', accessToken);
           localStorage.setItem('refresh', refreshToken);
           router('/mypage'); // 로그인 성공 시 마이페이지로 이동
       } catch (error) {
-          alert('유효하지 않은 정보입니다');
+          alert('The information is invalid');
           console.error('로그인 실패:', error);
       }
   };
@@ -74,14 +87,6 @@ const ButtonWrapper = styled.div`
   margin-bottom: 15px;
 `;
 
-// const Inputs = styled.input`
-//     display: flex;
-//     align-items: center;
-//     flex-direction: column;
-//     gap: 10px;
-//     margin-right: 10px;
-//     `
-
 const Title = styled.h4`
 font-size: 23px;
 font-weight: bold;
@@ -118,7 +123,6 @@ margin-top: 10px; /* 입력란 간격 추가 */
 // border-top: 2px solid lightgrey;
 // width: 400px; /* 선의 너비를 부모 요소의 너비와 일치시킵니다. */
 // text-align: center;
-
 // padding-top: 10px;
 // `;
 

@@ -21,8 +21,9 @@ export const login = async (user_id: string, password: string) => {
     try {
         const result = await api.post("/api/v1/business_user/login/", { user_id, password });
         console.log('api 호출', result);
-        return result.data;
+        return result.data.jwt_token;
     } catch (error) {
         throw error;
     }
 };
+
