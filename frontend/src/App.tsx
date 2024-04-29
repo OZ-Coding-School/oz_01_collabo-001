@@ -12,6 +12,7 @@ import Mypage from './pages/Mypage';
 import PostProject from './pages/Post-project';
 import Signup from './pages/Signup';
 import KanbanPage from './pages/kanban/KanbanPage';
+import WorkList from './pages/WorkList';
 
 function App() {
   const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ function App() {
         <Route path="/postproject" element={<PostProject />} />
         <Route path="/create" element={<Create />} />
         <Route path="/estimate" element={<Estimate />} />
+        <Route path="/findwork" element={<WorkList />} />
       </Routes>
       </QueryClientProvider>
       </>

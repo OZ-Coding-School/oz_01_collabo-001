@@ -31,7 +31,7 @@ const Nav = () => {
                 <Menu>
                     <MenuItem to="/mypage">My Account</MenuItem>
                     <MenuItem to="#">Hire Talent</MenuItem>
-                    <MenuItem to="#">Find Work</MenuItem>
+                    <MenuItem to="/findwork">Find Work</MenuItem>
                     {isLoggedIn ? (
                         <LogoutItem onClick={handleLogout}>Logout</LogoutItem>
                     ) : null} {/* 로그인 상태일 때만 로그아웃 메뉴 표시 */}
