@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import Nav from './components/Nav';
+
 import CompleteRegistration from './pages/CompleteRegistration';
 import Create from './pages/Create';
 import DescribeYou from './pages/DescribeYou';
@@ -13,13 +13,14 @@ import PostProject from './pages/Post-project';
 import Signup from './pages/Signup';
 import KanbanPage from './pages/kanban/KanbanPage';
 import WorkList from './pages/WorkList';
+import Layout from './components/Layout';
 
 function App() {
   const queryClient = new QueryClient();
   return (
   <>
   <QueryClientProvider client={queryClient}>
-      <Nav />
+      <Layout>
       <Routes>
         <Route path="/" element={<HomeLogin />} />
         <Route path="/signup" element={<Signup />} />
@@ -33,7 +34,9 @@ function App() {
         <Route path="/estimate" element={<Estimate />} />
         <Route path="/findwork" element={<WorkList />} />
       </Routes>
+      </Layout>
       </QueryClientProvider>
+    
       </>
   );
 }
