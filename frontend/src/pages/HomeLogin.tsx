@@ -60,9 +60,11 @@ const HomeLogin = () => {
         <ButtonWrapper>
             <Button variant="primary" size="md" style={{ width: '100%', height: 'auto' }} onClick={onClick}>Login</Button>
         </ButtonWrapper>
-        <CustomLink to="/signup">SignIn</CustomLink>
     </Form>
-    
+    <SignWrapper>
+    <CustomLink to="/signup">SignIn</CustomLink>
+    </SignWrapper>
+
     {/* <Title2>SNS Login</Title2> */}
     {/* <SnsButton>
         <Googlebtn><img src={GoogleImage} alt="Google" /></Googlebtn> 
@@ -117,6 +119,12 @@ margin-top: 10px; /* 입력란 간격 추가 */
     text-decoration: none;
 }
 `
+
+const SignWrapper = styled.div`
+margin-left: 280px;
+
+`
+
 // const Title2 = styled.div`
 // font-size: 14px;
 // margin-top: 90px;
