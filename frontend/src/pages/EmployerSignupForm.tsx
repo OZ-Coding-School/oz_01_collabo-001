@@ -57,8 +57,7 @@ const EmployerSignupForm = () => {
 
   // userId 필드의 값을 감시
   const watchedUserId = watch("user_id");
-  const watchedValues = watch(); // 모든 필드의 값을 관찰
-  console.log(watchedValues);
+  // const watchedValues = watch(); // 모든 필드의 값을 관찰
 
   // const isLoading = status === "pending";
   const isCheckUserIdLoading = checkUserIdStatus === "pending";
@@ -128,8 +127,6 @@ const EmployerSignupForm = () => {
     // 발송 요청이 실패하면 에러 메시지 표시
     const email = watch("email");
     const firstName = watch("first_name");
-    console.log(`First Name: ${firstName}`);
-    console.log(`Email: ${email}`);
 
     sendEmailVerificationCode({ email: email, first_name: firstName });
 
@@ -157,7 +154,6 @@ const EmployerSignupForm = () => {
     e.preventDefault();
     const email = watch("email");
     const verificationCode = watch("verificationCode");
-    console.log(`Verification code: ${verificationCode}`);
     // 타이머를 멈추고 인증 코드를 확인하는 API 호출
     // 인증 코드가 일치하면 인증된 이메일로 표시
     // 인증 코드가 일치하지 않으면 에러 메시지 표시
@@ -179,7 +175,6 @@ const EmployerSignupForm = () => {
     e.preventDefault();
     const email = watch("email");
     const firstName = watch("first_name");
-    console.log(`Resending verification code to ${email}`);
     sendEmailVerificationCode({ email: email, first_name: firstName });
     setTimer(300);
   };
@@ -192,7 +187,6 @@ const EmployerSignupForm = () => {
       return;
     }
     checkUserIdMutation(userId);
-    console.log("isValidId", isValidId);
   };
 
   const openModal = (e: React.MouseEvent<HTMLElement>) => {
